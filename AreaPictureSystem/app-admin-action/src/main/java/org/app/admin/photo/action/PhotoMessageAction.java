@@ -212,55 +212,6 @@ public class PhotoMessageAction extends GeneralAction<ForderActivity> {
 
 		if (checkId != null)
 			session.setAttribute("checkActivityId", checkId);
-		// Query querylistFA = new Query();
-		// // 如果用户是个人
-		// if (type.equals(BaseType.Type.PERSION.toString())) {
-		// querylistFA = super.craeteQueryWhere("parentId", "0",
-		// "listType.type", type, "boundId", adminUser.getId());
-		//
-		// } else {
-		// querylistFA = super.craeteQueryWhere("parentId", "0",
-		// "listType.type", type);
-		// }
-		//
-		// List<ForderActivity> listFA =
-		// this.forderActivityService.find(querylistFA, ForderActivity.class);
-		//
-		// // 如果用户是 BASEUTIS
-		//
-		// if (type.equals(BaseType.Type.BASEUTIS.toString())) {
-		//
-		// List<PhotoTime> lpt = PhotoTime.getPhotoTime(listFA, session);
-		// // List<PhotoTime> lpt = PhotoTime.getPhotoTime(listFA,
-		// // fa.getActivityTime(),false);
-		// // 加载所有的企业
-		// List<AdminCompany> lac = this.AdminCompanyService.find(new Query(),
-		// AdminCompany.class);
-		// modelAndView.addObject("listAdminCompany", lac);
-		// LoginInterceptor lo = new LoginInterceptor();
-		//
-		// List<LayerAdmonCompany> llac = lo.LayerAdmonCompany(lac,
-		// session,checkId);
-		// List<BaseTreeTime> lbpt = BaseTreeTime.getBaseTreeTime(llac,
-		// session);
-		// log.info(lbpt.toString());
-		//
-		// modelAndView.addObject("basePhotoTimeList",
-		// session.getAttribute("basePhotoTimeList"));
-		// // modelAndView.addObject("basePhotoTimeList", lbpt);
-		//
-		// } else {
-		//
-		// // 按日期进行分类,并且中当前菜单
-		// // modelAndView.addObject("photoTimeList",
-		// // PhotoTime.getPhotoTime(listFA,session));
-		// modelAndView.addObject("photoTimeList",
-		// session.getAttribute("photoTimeList"));
-		// // modelAndView.addObject("photoTimeList",
-		// // PhotoTime.getPhotoTime(listFA, fa.getActivityTime(),true));
-		// }
-
-		// TODO 如果 type 是 基本层单位，（中学，小学，幼儿园）
 		// 标签
 		modelAndView.addObject("lableList", labelService.find(new Query(), Label.class));
 
