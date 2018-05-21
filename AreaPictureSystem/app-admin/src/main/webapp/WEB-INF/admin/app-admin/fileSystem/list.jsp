@@ -30,7 +30,7 @@
 
 
 <script type="text/javascript">
-	function edit(o) {
+	function edit(o,o2) {
 		if (o != null) {
 			var forderActivityName = "#" + o + "_forderActivityName";
 			var address = "#" + o + "_address";
@@ -53,10 +53,12 @@
 
 			/* 	$("#boundId option:contains('" + $(boundId).text().trim() + "')")
 						.attr("selected", true); */
-			$(
+						
+				$("#boundCompany option[id="+o2+"]").attr("selected", true);	
+/* 			$(
 					"#boundCompany option:contains('"
 							+ $(boundCompany).text().trim() + "')").prop(
-					"selected", true);
+					"selected", true); */
 
 					$("#boundCompany").attr("disabled", true)	
 						
@@ -202,7 +204,7 @@
 												<td id="${item.id }_activityTime">${item.activityTime}</td>
 												<td id="${item.id }_createUser">${item.adminUser.name}</td>
 												<td class="center"><a href="javascript:void(0);"
-													onclick="return edit('${item.id}');">
+													onclick="return edit('${item.id}','${item.adminCompany.id }');">
 														<button type="button"
 															class="btn btn-primary btn-xs edit-news" data-id="1">编辑</button>
 												</a>

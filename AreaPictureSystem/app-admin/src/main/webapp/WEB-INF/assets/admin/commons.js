@@ -148,6 +148,9 @@ function ajaxUpdatePassword() {
 	}
 }
 
+
+
+
 // <!--取消收藏-->
 function cancelfavorites(o) {
 	var favoritesIds = "";

@@ -63,6 +63,7 @@ public class ForderActivity extends GeneralBean implements Comparable<ForderActi
 	private String month;
 	private String day;
 	private String cover;//封面
+	private String createUser;
 /*	private String showImg;
 	
 	
@@ -194,6 +195,13 @@ public class ForderActivity extends GeneralBean implements Comparable<ForderActi
 	}
 	public void setDay(String day) {
 		this.day = day;
+	}
+	
+	public String getCreateUser() {
+		return createUser;
+	}
+	public void setCreateUser(String createUser) {
+		this.createUser = createUser;
 	}
 	/* (非 Javadoc) 
 	* <p>Title: compareTo</p> 

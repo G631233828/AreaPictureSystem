@@ -7,6 +7,7 @@ import org.app.admin.annotation.SystemErrorLog;
 import org.app.admin.pojo.Resource;
 import org.app.admin.service.ResourceService;
 import org.app.admin.util.ConfigFileUtil;
+import org.app.admin.util.Configure;
 import org.app.admin.util.FileType;
 import org.app.admin.util.ResponseTools;
 import org.slf4j.Logger;
@@ -31,6 +32,8 @@ public class FileStreamAction {
 
     @Autowired
     private ResourceService resourceService;//资源（图片）
+    static Configure ec= Configure.getInstance();
+
 
 
     /**
@@ -72,11 +75,29 @@ public class FileStreamAction {
                         }
                     }catch (Exception e){
                             buffer = new StringBuffer(r.getOriginalPath() + r.getGenerateName());
+                            
                     }
 
                     try {
                         log.info("访问缩略图片的路径：{}", buffer.toString());
                         File file = new File(buffer.toString());
+                        //如果图片不存在则从配置文件的目录拿
+                        if(!file.exists()){
+                        	 StringBuffer path = new StringBuffer(ec.getValueString("resourcesPath"));
+                        	  //获取不同图片的大小
+                             if (type.equals("min")) {
+                                 buffer = new StringBuffer(path+File.separator + r.getImgCompressionBean().getMin_generateName());
+                             } else if (type.equals("middle")) {
+                                 buffer = new StringBuffer(path +File.separator+ r.getImgCompressionBean().getMiddle_generateName());
+                             } else if (type.equals("max")) {
+                                 buffer = new StringBuffer(path+File.separator+ r.getImgCompressionBean().getMax_generateName());
+                             } else {
+                                 buffer = new StringBuffer(path +File.separator+ r.getGenerateName());
+                             }
+                             log.info("访问缩略图片的路径：{}", buffer.toString());
+                             file = new File(buffer.toString());
+                        }
+                        
                         FileInputStream is = new FileInputStream(file);
                         ResponseTools.responsePicture(response, is);
                     } catch (Exception e) {

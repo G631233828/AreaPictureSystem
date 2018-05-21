@@ -294,12 +294,16 @@ public class ImageTool {
 	}
 
 	public static void main(String[] arg) {
+		try{
 			ImageTool mypic = new ImageTool();
-			String fileName="1.JPG";	//图片的路径
+			String fileName="123.jpg";	//图片的路径
 			// compressPic(大图片路径,生成小图片路径,大图片文件名,生成小图片文名,生成小图片宽度,生成小图片高度,是否等比缩放(默认为true))
-			mypic.compressPic("C:\\Users\\shining\\Desktop\\新建文件夹\\",
-					"C:\\Users\\shining\\Desktop\\新建文件夹\\", fileName,
+			mypic.compressPic("I:\\",
+					"I:\\", fileName,
 					"1_"+fileName,350,300,true);
+	}catch(Exception e){
+		e.printStackTrace();
+	}
 	}
 
 }

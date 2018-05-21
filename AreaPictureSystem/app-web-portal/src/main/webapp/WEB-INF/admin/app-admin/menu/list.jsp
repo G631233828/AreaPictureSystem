@@ -147,7 +147,7 @@
 											<label class="col-sm-4 control-label">类型</label>
 											<div class="col-sm-8">
 												<select class="form-control m-b" name="type" id="type">
-													<option value="HaveMenu">有只菜单</option>
+													<option value="HaveMenu">有子菜单</option>
 													<option value="NoMenu">无子菜单</option>
 												</select>
 											</div>

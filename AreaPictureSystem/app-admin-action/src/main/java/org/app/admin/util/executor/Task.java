@@ -45,6 +45,8 @@ public class Task implements Runnable {
 
     @Override
     public void run() {
+    	
+    	log.info("处理的线程："+Thread.currentThread().getName());
         Task task = this;
         Resource r = loadResuces(task);
         if (r != null) {

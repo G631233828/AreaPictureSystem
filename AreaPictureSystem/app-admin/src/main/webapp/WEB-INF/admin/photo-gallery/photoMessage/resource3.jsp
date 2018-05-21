@@ -12,9 +12,6 @@ p {
 	href="${pageContext.request.contextPath}/assets/admin/css/plugins/awesome-bootstrap-checkbox/awesome-bootstrap-checkbox.css"
 	rel="stylesheet">
 
-<script
-	src="${pageContext.request.contextPath}/assets/admin/css/plugins/layer/layer/layer.min.js"></script>
-
 <script type="text/javascript">
 	var i = 0;
 	function choose() {
@@ -24,7 +21,6 @@ p {
 			$("#downloads").show();
 			$("#favorites").show();
 			$("#setTheCover").show();
-			$("#edit").show();
 			$("#choose").html("<i class='fa fa-square-o'>&nbsp;取消选择</i>");
 			$(".collection").show();
 			i = 1;
@@ -35,7 +31,6 @@ p {
 			$("#downloads").hide();
 			$("#favorites").hide();
 			$("#setTheCover").hide();
-			$("#edit").hide();
 			$("#choose").html("<i class='fa fa-check-square-o'>&nbsp;选择</i>");
 			$(".collection").hide();
 			i = 0;
@@ -61,29 +56,6 @@ p {
 		}
 
 		$('#deleteModal').modal('show');
-
-	}
-	function checkSelect() {
-		var a = $("input[name='ids']:checked").length;
-
-		if (a == 0) {
-			$('#deleteModal').modal('show')
-			$("#modalMessage").text("请先选中需要批量修改的的图片！");
-			$("#delete").hide();
-		}else{
-			
-			var ids = $("input[name='ids']:checked");
-			//获取所有的id执行删除操作，使用ajax
-			var str = "";
-			$(ids).each(function() {
-				str += this.value + ",";
-			});
-			$("#made_id").val(str);
-			
-		$('#File_Made').modal('show');
-			
-		} 
-
 
 	}
 
@@ -147,11 +119,14 @@ p {
 
 
 						</c:when>
+						<c:otherwise>
+							<h3>请先： 选择活动 或 创建活动</h3>
+						</c:otherwise>
 					</c:choose>
 
 				</div>
 				<div class="col-sm-4">
-					<%-- <div class="input-group">
+					<div class="input-group">
 						<input type="text" placeholder="图片快速搜索" class="input form-control"
 							value="${mfregex }" id="mfregex"> <span
 							class="input-group-btn">
@@ -160,7 +135,7 @@ p {
 								<i class="fa fa-search"></i> 搜索
 							</button>
 						</span>
-					</div> --%>
+					</div>
 				</div>
 			</div>
 
@@ -209,7 +184,7 @@ p {
                 <button class="btn btn-info " type="button"><i class="fa fa-paste"></i> 编辑</button>
                 -->
 					<c:if
-						test="${sessionScope.userSession.userType eq 'ADMINISTRATORS' || webType  eq 'PERSION'  || sessionScope.userSession.id == fa.boundId}">
+						test="${sessionScope.userSession.userType eq 'ADMINISTRATORS' or webType  eq 'PERSION' }">
 						<button onclick="return tobatchDelete()" class="btn btn-danger "
 							style="display: none;" id="deletes" type="button">
 							<i class="fa fa-warning"> </i><span class="bold">批量删除</span>
@@ -222,34 +197,21 @@ p {
 						<i class="fa fa-check"></i>&nbsp;下载
 					</button>
 
-
-
-					<button class="btn btn-primary " style="display: none;" id="edit"
-						type="button" onclick="return checkSelect()">
-						<i class="fa fa-edit"></i>&nbsp;修改
-					</button>
-
-					<a data-toggle="modal" data-target="#File_Made" id="editView"></a>
-
-
-
-
-
 					<c:if test="${webType  ne 'PERSION' }">
 
 						<button class="btn btn-warning " onclick="return tofavorites();"
 							style="display: none;" id="favorites" type="button">
 							<i class="fa fa-heart"> </i> 收藏
 						</button>
-
-
-
-						<button class="btn btn-primary "
-							onclick="return setTheCover('${sessionScope.checkActivityId}');"
-							id="setTheCover" style="display: none;" type="button">
-							<i class="fa fa-heart"> </i> 设为封面
-						</button>
 					</c:if>
+
+
+					<button class="btn btn-primary "
+						onclick="return setTheCover('${sessionScope.checkActivityId}');"
+						id="setTheCover" style="display: none;" type="button">
+						<i class="fa fa-heart"> </i> 设为封面
+					</button>
+
 
 
 
@@ -269,160 +231,177 @@ p {
 		<div class="mail-box">
 			<div>
 				<!--  gallery 相册弹出层-->
-				<div class="col-lg-12 gallery imgs" id="imgs">
+				<div class="col-lg-12 gallery">
 					<ul style="display: initial;">
-
 						<c:forEach items="${listPhoto.datas}" var="item"
 							varStatus="status">
 
 							<li>
 								<!-- 已经将点击预览移植到图片层中 -->
-								<div class="file-box">
+								<div class="file-box" >
 									<div class="checkbox" name="checkboxs"
 										style="z-index: 999; position: absolute; margin-top: 3px; margin-left: 15px; display: none">
 										<input id="ids${item.id}" value="${item.id }" type="checkbox"
 											name="ids"> <label for="ids${item.id}"> </label>
-									</div>
 								</div>
+								</div> 
+								
+								
+								
+							<a target="_blank"
+								href="${pageContext.request.contextPath}/file/getImg/${item.id }?type=">
+
+									<div class="file-box"
+										style="width: 280px; margin-left: 10px; margin-top: 0px;">
+
+										<div class="file">
+											<img alt="image" class="img-responsive"
+												style="margin: 0 auto;"
+												onclick="return findImg('${item.id}')"
+												src="${pageContext.request.contextPath}/file/getImg/${item.id}?type=min">
 
 
-								<div class="file-box"
-									style="width: 280px; margin-left: 10px; margin-top: 0px;">
-
-									<div class="file">
-										<img alt="image" class="img-responsive"
-											style="margin: 0 auto; width: 258px; height: 172px;"
-											onclick="return findImg('${item.id}')"
-											src="${pageContext.request.contextPath}/file/getImg/${item.id}?type=max">
-									</div>
-
-
-
-
-									<div class="imgs" id="imgs">
-										<small>
-											<table border="0"
-												style="width: 250px !important; margin-top: -10px;">
-
-												<tr style="width: 250px;">
-													<td style="white-space: nowrap"
-														title="${ item.imgInfoBean.make}"><c:if
-															test="${not empty item.imgInfoBean.make}">
+										</div>
+										
+										
+										
+										
+											<div class="file-name">
+												<small>
+													<table border="0" style="width: 250px !important;">
+													
+													<tr style="width: 250px;">
+														<td style="white-space: nowrap" title="${ item.imgInfoBean.make}">
+														<c:if test="${not empty item.imgInfoBean.make}">
 													  ${fn:substring(item.imgInfoBean.make,0,15)}
 														</c:if></td>
-													<td>&nbsp;</td>
-													<td align="right"
-														style="white-space: nowrap; text-overflow: ellipsis; overflow: hidden;">
-														<c:if
-															test="${not empty item.imgInfoBean.imgHeight && not empty  item.imgInfoBean.imgWidth}">
-															<c:set var="imgWidth"
-																value="${item.imgInfoBean.imgWidth}" />
-															<c:set var="imgHeight"
-																value="${item.imgInfoBean.imgHeight}" />
-															<c:set var="imgHeight_len"
-																value="${fn:length(imgHeight)-6}" />
-															<c:set var="imgWidth_len"
-																value="${fn:length(imgWidth)-6}" />
-															<c:choose>
-																<c:when test="${fn:contains(imgWidth,'pix')}">
+															<td>&nbsp;</td>
+														<td align="right" style="white-space: nowrap ;text-overflow:ellipsis;overflow:hidden;" >
+														<c:if test="${not empty item.imgInfoBean.imgHeight && not empty  item.imgInfoBean.imgWidth}">
+														 <c:set var="imgWidth" value="${item.imgInfoBean.imgWidth}" />
+														 <c:set var="imgHeight" value="${item.imgInfoBean.imgHeight}" />
+														 <c:set var="imgHeight_len" value="${fn:length(imgHeight)-6}" />
+														 <c:set var="imgWidth_len" value="${fn:length(imgWidth)-6}" />
+														 <c:choose>
+															 <c:when test="${fn:contains(imgWidth,'pix')}">
 															 ${fn:substring(imgWidth,0,imgHeight_len)}*${fn:substring(imgHeight,0,imgHeight_len)}</c:when>
-																<c:otherwise>
+														<c:otherwise>
 															${item.imgInfoBean.imgWidth}*${item.imgInfoBean.imgHeight}
 														</c:otherwise>
-															</c:choose>
+														</c:choose>
+														</c:if>
+														</td>
+													
+													</tr>
+													
+														<td title="${item.editorImgInfo.resourceAddress }" colspan="2" style="white-space: nowrap ;text-overflow:ellipsis;overflow:hidden;">地址：
+														<c:if test="${not empty item.editorImgInfo.resourceAddress }">
+															  ${fn:substring(item.editorImgInfo.resourceAddress,0,10)}
+															</c:if>
+													   </td>
+														<td>作者： <c:if test="${not empty item.editorImgInfo.person }">
+																	 ${fn:substring(item.editorImgInfo.person,0,5)}
+																	${item.editorImgInfo.person }
+													</c:if></td>
+													</tr>
+													
+													<tr>
+														<td title="${item.originalName}">
+														
+														<c:if test="${not empty item.originalName}">
+															  ${fn:substring(item.originalName,0,20)}
 														</c:if>
 													</td>
-
-												</tr>
-												<tr>
-													<td title="${item.editorImgInfo.resourceName  }"
-														style="white-space: nowrap; text-overflow: ellipsis; overflow: hidden;">名称：
-														<c:if test="${not empty item.editorImgInfo.resourceName }">
-																	 ${fn:substring(item.editorImgInfo.resourceName,0,5)}
-													</c:if>
-													</td>
-													<td title="${item.editorImgInfo.resourceAddress }"
-														colspan="2"
-														style="white-space: nowrap; text-overflow: ellipsis; overflow: hidden;">地址：
-														<c:if
-															test="${not empty item.editorImgInfo.resourceAddress }">
-															  ${fn:substring(item.editorImgInfo.resourceAddress,0,15)}
-															</c:if>
-													</td>
-												</tr>
-
-												<tr>
-													<td title="${item.editorImgInfo.person  }" colspan="2"
-														style="white-space: nowrap; text-overflow: ellipsis; overflow: hidden;">主要人物：
-														<c:if test="${not empty item.editorImgInfo.person }">
-																	 ${fn:substring(item.editorImgInfo.person,0,5)}
-															</c:if>
-													</td>
-													<td title="${item.editorImgInfo.photographer  }"
-														colspan="2"
-														style="white-space: nowrap; text-overflow: ellipsis; overflow: hidden;">作者：
-														<c:if test="${not empty item.editorImgInfo.photographer }">
-																	 ${fn:substring(item.editorImgInfo.photographer,0,5)}
-													</c:if>
-													</td>
-												</tr>
-
-												<tr>
-													<td title="${item.originalName}"><c:if
-															test="${not empty item.originalName}">
-															  ${fn:substring(item.originalName,0,10)}
-														</c:if></td>
-													<td><c:if test="${not empty item.imgInfoBean.imgSize}">${item.imgInfoBean.imgSize }MB </c:if></td>
-													<td><c:choose>
-															<c:when
-																test="${sessionScope.userSession.userType eq 'ADMINISTRATORS'  || sessionScope.userSession.id == item.boundId }">
-																<span> <a
-																	onclick="updateImg('${item.id}','${item.editorImgInfo.resourceName}','${item.editorImgInfo.person}',
+														<td><c:if test="${not empty item.imgInfoBean.imgSize}">${item.imgInfoBean.imgSize }MB </c:if></td>
+														<td>
+															<c:choose>
+														<c:when
+															test="${sessionScope.userSession.userType eq 'ADMINISTRATORS'  || sessionScope.userSession.id == item.boundId }">
+															<span> <a
+																onclick="updateImg('${item.id}','${item.editorImgInfo.resourceName}','${item.editorImgInfo.person}',
 																	'${item.editorImgInfo.photographer}','${item.editorImgInfo.resourceAddress}',
 																	'${item.editorImgInfo.description}','${item.editorImgInfo.sort }')"
-																	data-toggle="modal" data-target="#File_Made"> 修改 </a>
-																</span>
-																<span style="padding-left: 10%;"> <a
-																	onclick="deleteAlert('${item.id}','${sessionScope.checkActivityId}')">删除
-																</a>
-																</span>
-															</c:when>
-															<c:otherwise>
-																<span style="padding-left: 10%;"> </span>
+																data-toggle="modal" data-target="#File_Made"> 修改 </a>
+															</span>
+															<span style="padding-left: 10%;"> <a
+																onclick="deleteAlert('${item.id}','${sessionScope.checkActivityId}')">删除
+															</a>
+															</span>
+														</c:when>
+														<c:otherwise>
+															<span style="padding-left: 10%;"> </span>
 
-															</c:otherwise>
-														</c:choose></td>
-												</tr>
+														</c:otherwise>
+													</c:choose> 
+														
+														
+														
+														</td>
+													</tr>
+													
+													<tr>
+													<td colspan="3">
+															<c:set var="contains" value="no" /> <c:forEach var="list"
+														items="${listFavorites }" varStatus="status">
+														<c:if test="${list.id eq item.id}">
+															<c:set var="contains" value="yes" />
+														</c:if>
+													</c:forEach>
+													
+												 <c:choose>
+														<c:when test="${contains=='yes' }">
+															<span style="padding-left: 10%; display: none;"
+																class="collection" id="collection_${item.id }"<%-- onclick="return cancelfavorites('${item.id}')" --%>>
+																<a><i class="fa fa-heart"></i>已收藏</a>
+															</span>
+														</c:when>
+														<c:otherwise>
+															<span style="padding-left: 10%; display: none;"
+																class="collection" id="collection_${item.id }"> </span>
+														</c:otherwise>
+													</c:choose> <br />
+													</td>
+													</tr>
+													
 
-												<tr>
-													<td colspan="3"><c:set var="contains" value="no" /> <c:forEach
-															var="list" items="${listFavorites }" varStatus="status">
-															<c:if test="${list.id eq item.id}">
-																<c:set var="contains" value="yes" />
-															</c:if>
-														</c:forEach> <c:choose>
-															<c:when test="${contains=='yes' }">
-																<span style="display: none; margin-left: 0px;"
-																	class="collection" id="collection_${item.id }"<%-- onclick="return cancelfavorites('${item.id}')" --%>>
-																	<a><i class="fa fa-heart"></i>已收藏</a>
-																</span>
-															</c:when>
-															<c:otherwise>
-																<span style="padding-left: 10%; display: none;"
-																	class="collection" id="collection_${item.id }">
-																</span>
-															</c:otherwise>
-														</c:choose> <br /></td>
-												</tr>
 
 
-
-
-											</table>
-										</small>
+													</table> 
+												</small>
+											</div>
+										
+										
+										
+										
+										
+										
+										
+										
+										
+										
+										
+										
+										
 									</div>
+									
+									
+							</a>
+							
+							
+							
+							
+							
+							
+							
+							
+							
+							
+							
+							
+							
+							
+							
 
-								</div>
 							</li>
 						</c:forEach>
 					</ul>
@@ -516,7 +495,6 @@ p {
 
 
 
-
 	<script type="text/javascript">
    function checkout(){
 	  var h=$("h2").text();
@@ -544,21 +522,7 @@ p {
 
 
 
-	<script>
-;!function(){
-layer.use('extend/layer.ext.js', function(){
-    //初始加载即调用，所以需放在ext回调里
-    layer.ext = function(){
-        layer.photosPage({
-           // html:'<div style="padding:20px;">这里传入自定义的html<p>相册支持左右方向键，支持Esc关闭</p><p>另外还可以通过异步返回json实现相册。更多用法详见官网。</p><p>'+ unescape("%u7D20%u6750%u5BB6%u56ED%20-%20sc.chinaz.com") +'</p><p id="change"></p></div>',
-            title: '<c:if test="${webType=='AREA'}"> 区域 </c:if> <c:if test="${webType=='BASEUTIS'}"> 基层单位 </c:if> <c:if test="${webType=='DIRECTLYUTIS'}"> 直属单位 </c:if><c:if test="${webType=='PERSION'}"> 个人</c:if>《 ${fa.forderActivityName} 》',
-            id: 100, //相册id，可选
-            parent:'#imgs'
-        });
-    };
-});
-}();
-</script>
+
 
 
 

@@ -66,26 +66,6 @@
 		$("#toModal-form").trigger("click");
 
 	}
-
-	function selectType() {
-		var type = $("#searchType").find("option:selected").val(); //获取Select选择的Text
-		if (type == "searchForderActivity") {
-			$("#serachForder").show();
-			$("#serachPicture").hide();
-			$("#serachForderQuery3").val("");
-			$("#serachForderQuery4").val("");
-			$("#serachForderQueryVal3").val("");
-			$("#serachForderQueryVal4").val("");
-		} else {
-			$("#serachForder").hide();
-			$("#serachPicture").show();
-			$("#serachForderQuery1").val("");
-			$("#serachForderQuery2").val("");
-			$("#serachForderQueryVal1").val("");
-			$("#serachForderQueryVal2").val("");
-		}
-
-	}
 </script>
 
 
@@ -186,227 +166,191 @@
 		<div class="ibox-content">
 			<form role="search" method="post" class="form-inline"
 				action="${pageContext.request.contextPath}/photoMessageAction/searchImgsByQuerys">
-
-
+			
+			
 				<div class="form-group">
 					<select class="input-sm form-control input-s-sm inline"
-						name="searchType" id="searchType" style="height: 34px;"
-						onchange="return selectType()">
+						name="selectQuery1" id="selectQuery1" style="height: 34px;"	>
 						<option value="">请选择查询条件</option>
 						<option value="searchForderActivity">查找活动</option>
 						<option value="searchPicture">查找图片</option>
 					</select>
 				</div>
+			
+			
+			
+			
+			
+			
+			
+			
+				<div class="form-group" style="display: none;">
+					<select class="input-sm form-control input-s-sm inline"
+						name="selectQuery1" id="selectQuery1" style="height: 34px;"	>
+						<option value="">请选择查询条件</option>
+						<option value="forderActivityName">活动主题</option>
+						<!-- <option value="adminUser.$name">活动创建人</option> -->
+						<option value="uploadPerson">上传者</option>
+						<option value="editorImgInfo.resourceName">图片名称</option>
+						<option value="editorImgInfo.person">图片主要人物</option>
+						<option value="editorImgInfo.photographer">拍摄者</option>
+						<option value="editorImgInfo.resourceAddress">图片所在地址</option>
+						<option value="forderActivityAddress">活动地址</option>
+					</select>
+				</div>
 
 
-				<div class="form-group" style="display: none;" id="serachForder">
-					<div class="form-group">
-						<select class="input-sm form-control input-s-sm inline"
-							name="serachForderQuery1" id="serachForderQuery1"
+				<div class="form-group"  style="display: none;">
+					<input type="text" placeholder="输入查询内容..." class="form-control"
+						name="selectVal1" id="selectVal1" value="${selectVal1}">
+				</div>
+			
+			
+			
+				<div class="form-group"  style="display: none;">
+					<select class="input-sm form-control input-s-sm inline"
+						name="selectQuery" id="selectQuery" style="height: 34px;"
+						onchange="return selectOne();">
+						<option value="">请选择查询条件</option>
+						<option value="forderActivityDate">时间段查询活动</option>
+						<option value="forderActivityName">活动主题</option>
+						<!-- <option value="adminUser.name">活动创建人</option> -->
+						<option value="uploadPerson">上传者</option>
+						<option value="editorImgInfo.resourceName">图片名称</option>
+						<option value="editorImgInfo.person">图片主要人物</option>
+						<option value="editorImgInfo.photographer">拍摄者</option>
+						<option value="editorImgInfo.resourceAddress">图片所在地址</option>
+						<option value="forderActivityAddress">活动地址</option>
+					</select>
+				</div>
+
+
+				<div class="form-group" style="display: none;" id="CommonSearch">
+					<input type="text" placeholder="输入查询内容..." class="form-control"
+						name="selectVal" id="selectVal" value="${selectVal}">
+				</div>
+
+
+				<div class="form-group" style="display: none;" id="betweenDate">
+					<div class="input-daterange input-group" id="datepicker">
+						<input type="text" class="input-sm form-control datainput" value="${time1 }"
+							name="time1" data-date-format="yyyy-mm-dd" placeholder="开始时间"
+							style="height: 34px;"> <span class="input-group-addon">到</span>
+						<input type="text" class="input-sm form-control datainput" value="${time2 }"
+							name="time2" data-date-format="yyyy-mm-dd" placeholder="结束时间"
 							style="height: 34px;">
-							<option value="">请选择查询条件</option>
-							<option value="forderActivityName">活动主题</option>
-							<option value="name">活动创建人</option>
-							<option value="address">地点</option>
-						</select>
-					</div>
-					<div class="form-group">
-						<input type="text" placeholder="输入查询内容..." class="form-control"
-							name="serachForderQueryVal1" id="serachForderQueryVal1"
-							value="${serachForderQueryVal1}">
-					</div>
-
-					<div class="form-group">
-						<select class="input-sm form-control input-s-sm inline"
-							name="serachForderQuery2" id="serachForderQuery2"
-							style="height: 34px;" onchange="return selectOne();">
-							<option value="">请选择查询条件</option>
-							<option value="forderActivityDate">时间段查询活动</option>
-							<option value="forderActivityName">活动主题</option>
-							<option value="name">活动创建人</option>
-							<option value="address">地点</option>
-						</select>
-					</div>
-
-					<div class="form-group" style="display: none;" id="betweenDate">
-						<div class="input-daterange input-group" id="datepicker">
-							<input type="text" class="input-sm form-control datainput"
-								value="${time1 }" name="time1" data-date-format="yyyy-mm-dd"
-								id="time1" placeholder="开始时间" style="height: 34px;"> <span
-								class="input-group-addon">到</span> <input type="text"
-								class="input-sm form-control datainput" value="${time2 }"
-								id="time2" name="time2" data-date-format="yyyy-mm-dd"
-								placeholder="结束时间" style="height: 34px;">
-						</div>
-					</div>
-
-					<div class="form-group" id="CommonSearch">
-						<input type="text" placeholder="输入查询内容..." class="form-control"
-							name="serachForderQueryVal2" id="serachForderQueryVal2"
-							value="${serachForderQueryVal2}">
 					</div>
 				</div>
-
-
-
-				<div class="form-group" style="display: none;" id="serachPicture">
-					<div class="form-group">
-						<select class="input-sm form-control input-s-sm inline"
-							name="serachForderQuery3" id="serachForderQuery3" style="height: 34px;">
-							<option value="">请选择查询条件</option>
-							<option value="uploadPerson">上传者</option>
-							<option value="editorImgInfo.resourceName">图片名称</option>
-							<option value="editorImgInfo.person">图片主要人物</option>
-							<option value="editorImgInfo.photographer">拍摄者</option>
-							<option value="editorImgInfo.resourceAddress">图片所在地址</option>
-							<option value="forderActivityAddress">活动地址</option>
-						</select>
-
-					</div>
-
-					<div class="form-group">
-						<input type="text" placeholder="输入查询内容..." class="form-control"
-							name="serachForderQueryVal3" id="serachForderQueryVal3" value="${serachForderQueryVal3}">
-					</div>
-					<div class="form-group">
-						<select class="input-sm form-control input-s-sm inline"
-							name="serachForderQuery4" id="serachForderQuery4" style="height: 34px;">
-							<option value="">请选择查询条件</option>
-							<option value="uploadPerson">上传者</option>
-							<option value="editorImgInfo.resourceName">图片名称</option>
-							<option value="editorImgInfo.person">图片主要人物</option>
-							<option value="editorImgInfo.photographer">拍摄者</option>
-							<option value="editorImgInfo.resourceAddress">图片所在地址</option>
-							<option value="forderActivityAddress">活动地址</option>
-						</select>
-					</div>
-
-					<div class="form-group" >
-						<input type="text" placeholder="输入查询内容..." class="form-control"
-							name="serachForderQueryVal4" id="serachForderQueryVal4" value="${serachForderQueryVal4}">
-					</div>
-				</div>
-
-
-
+				
+				
+				
+				
+				
+				
+				
+				
 				<button class=" btn btn-primary" type="submit">搜索</button>
 			</form>
 		</div>
 		<script type="text/javascript">
 			$(function() {
-				var searchType = '${searchType}';
+				var query ='${selectQuery}';
 				//回显 "selectQuery"  下拉框id  ${schoolCode} 后台放作用域里的值  
-				$("#searchType option").each(function() {
-					if ($(this).val() == searchType) {
+				$("#selectQuery option").each(function() {
+					if ($(this).val() == query) {
 						$(this).attr("selected", true);
 					}
 				});
-
-				var serachForderQuery1 = '${serachForderQuery1}';
-				var serachForderQuery2 = '${serachForderQuery2}';
-				var serachForderQueryVal1 = '${serachForderQueryVal1}';
-				var serachForderQueryVal2 = '${serachForderQueryVal2}';
-				var serachForderQuery3 = '${serachForderQuery3}';
-				var serachForderQuery4 = '${serachForderQuery4}';
-				var serachForderQueryVal3 = '${serachForderQueryVal3}';
-				var serachForderQueryVal4 = '${serachForderQueryVal4}';
 				
+				var query1 ='${selectQuery1}';
+				//回显 "selectQuery"  下拉框id  ${schoolCode} 后台放作用域里的值  
+				$("#selectQuery1 option").each(function() {
+					if ($(this).val() == query1) {
+						$(this).attr("selected", true);
+					}
+				});
 				
-				
-				var time1 = '${time1}';
-				var time2 = '${time2}';
-
-				if (serachForderQuery1 != "" || serachForderQuery2 != "") {
-					$("#serachForder").show();
-					$("#serachForderQuery1 option").each(function() {
-						if ($(this).val() == serachForderQuery1) {
-							$(this).attr("selected", true);
-						}
-					});
-					$("#serachForderQuery2 option").each(function() {
-						if ($(this).val() == serachForderQuery2) {
-							$(this).attr("selected", true);
-						}
-					});
-			/* 		$("#serachForderQueryVal1 option").each(function() {
-						if ($(this).val() == serachForderQueryVal1) {
-							$(this).attr("selected", true);
-						}
-					}); */
-					if (serachForderQueryVal2 != "") {
-						$("#CommonSearch").show();
-						$("#betweenDate").hide();
-						$("#serachForderQueryVal2 option").each(function() {
-							if ($(this).val() == serachForderQueryVal2) {
-								$(this).attr("selected", true);
-							}
-						});
-
-					}
-
-					if (time1 != "" || time2 != "") {
-						$("#CommonSearch").hide();
-						$("#betweenDate").show();
-						$("#time2 option").each(function() {
-							if ($(this).val() == time2) {
-								$(this).attr("selected", true);
-							}
-						});
-						$("#time1 option").each(function() {
-							if ($(this).val() == time1) {
-								$(this).attr("selected", true);
-							}
-						});
-					}
-
-				}else if(serachForderQuery3 != "" || serachForderQuery4 != ""){
-					
-					$("#serachPicture").show();
-					$("#serachForderQuery3 option").each(function() {
-						if ($(this).val() == serachForderQuery3) {
-							$(this).attr("selected", true);
-						}
-					});
-					$("#serachForderQuery4 option").each(function() {
-						if ($(this).val() == serachForderQuery4) {
-							$(this).attr("selected", true);
-						}
-					});
-					$("#serachForderQueryVal3 option").each(function() {
-						if ($(this).val() == serachForderQueryVal3) {
-							$(this).attr("selected", true);
-						}
-					});
-					if (serachForderQueryVal4 != "") {
-						$("#serachForderQueryVal4 option").each(function() {
-							if ($(this).val() == serachForderQueryVal4) {
-								$(this).attr("selected", true);
-							}
-						});
-
-					}
-
-					
+				if(query =='forderActivityDate'){
+					$("#betweenDate").show();
+					$("#CommonSearch").hide();
+				}else{
+					$("#betweenDate").hide();
+					$("#CommonSearch").show();
 				}
-
+				
+				
+				
+				
 			});
 
+			
+			
 			function selectOne() {
-				var serachForderQuery2 = $("#serachForderQuery2").val();
-				if (serachForderQuery2 == 'forderActivityDate') {
+				var selectval = $("#selectQuery").val();
+				if (selectval == 'forderActivityDate') {
 					$("#CommonSearch").hide();
-					$("#serachForderQueryVal2").val('');
 					$("#betweenDate").show();
 				} else {
 					$("#CommonSearch").show();
-					$("#time1").val('');
-					$("#time2").val('');
 					$("#betweenDate").hide();
 				}
 			}
+			
+			
+			
+			
 		</script>
 
 
+
+
+		<%-- 	<div class="row">
+			<div class="col-xs-6 col-sm-12">
+				<form role="search" class="navbar-form-custom " method="post"
+					action="${pageContext.request.contextPath}/photoMessageAction/searchImgsByQuerys">
+					<div class="row" style="width: 1000px; margin-left: 0px;">
+
+						<div class="col-xs-6 col-sm-4">
+							<select class="input-sm form-control input-s-sm inline"
+								name="selectQuery" id="selectQuery"
+								style="float: left; margin-left: 10px; height: 30px; margin-top: 15px;">
+								<option value="">请选择查询条件</option>
+								<option value="createDate">日期</option>
+								<option value="uploadPerson">上传者</option>
+								<option value="editorImgInfo.resourceName">图片名称</option>
+								<option value="editorImgInfo.person">图片主要人物</option>
+								<option value="editorImgInfo.photographer">拍摄者</option>
+								<option value="editorImgInfo.resourceAddress">图片所在地址</option>
+								<option value="forderActivityAddress">活动地址</option>
+							</select>
+						</div>
+						<div class="col-xs-6 col-sm-4">
+							<input type="text" placeholder="输入查询内容..." style="float: left;"
+								class="form-control" name="selectVal" id="selectVal"
+								value="${selectVal}">
+						</div>
+						<div class="col-xs-6 col-sm-4">
+							<button name="name"
+								style="float: left; margin-left: 10px; margin-top: 10px;"
+								class=" btn btn-primary">搜索</button>
+						</div>
+						<script type="text/javascript">
+							$(function() {
+								//回显 "selectQuery"  下拉框id  ${schoolCode} 后台放作用域里的值  
+								$("#selectQuery option").each(function() {
+									if ($(this).val() == '${selectQuery}') {
+										$(this).attr("selected", true);
+									}
+								});
+							});
+						</script>
+
+					</div>
+
+				</form>
+			</div>
+
+		</div> --%>
 
 
 

@@ -19,6 +19,7 @@ import org.app.webAdmin.service.AdminUserService;
 import org.app.webAdmin.service.ContestImagesService;
 import org.app.webAdmin.service.ContestService;
 import org.app.webAdmin.service.UsersUploadsService;
+import org.app.webAdmin.util.BaseType.UserType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -98,9 +99,23 @@ public class AdminUserAction extends GeneralAction<AdminUser> {
 	
 	
 	@RequestMapping("/createOrUpdateToFind")
-	public ModelAndView list(HttpSession session, AdminUser adminUser, String roleId, String companyId) {
+	public ModelAndView list(HttpSession session, AdminUser adminUser, String roleId,String type) {
 		ModelAndView modelAndView = new ModelAndView();
 		modelAndView.setViewName("redirect:/adminUser/list");
+		
+		if(Common.isNotEmpty(type)){
+			if(type.equals("USER")){
+				adminUser.setUserType(UserType.USER);
+			}else if(type.equals("MANAGER")){
+				adminUser.setUserType(UserType.MANAGER);
+			}else if(type.equals("ADMINISTRATORS")){
+				adminUser.setUserType(UserType.ADMINISTRATORS);
+			}else{
+				adminUser.setUserType(null);
+			}
+			
+		}
+		
 		// git AdminRole and AdminCompany
 		if (roleId != null)
 			adminUser.setAdminRole(this.adminRoleService.findOneById(roleId, AdminRole.class));

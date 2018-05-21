@@ -62,12 +62,12 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
+/*
+@Controller*/
+/*@RequestMapping("/photoMessageAction")*/
+public class PhotoMessageAction2 extends GeneralAction<ForderActivity> {
 
-@Controller
-@RequestMapping("/photoMessageAction")
-public class PhotoMessageAction extends GeneralAction<ForderActivity> {
-
-	private static final Logger log = LoggerFactory.getLogger(PhotoMessageAction.class);
+	private static final Logger log = LoggerFactory.getLogger(PhotoMessageAction2.class);
 
 	@Autowired
 	private ForderActivityService forderActivityService;
@@ -85,6 +85,7 @@ public class PhotoMessageAction extends GeneralAction<ForderActivity> {
 	private TypeService typeService;
 	@Autowired
 	private ExecutorsQueue executorsQueue;
+	
 
 	/**
 	 * 查找图片页面
@@ -298,10 +299,11 @@ public class PhotoMessageAction extends GeneralAction<ForderActivity> {
 			// 更新到数据库
 			this.resourceService.insert(rf);
 			this.executorsQueue.Executor(rf.getGenerateName(), this.resourceService);
-
-			//
-			// SingletionThreadPoolExecutor.getInstance().getPool()
-			// .execute(new Task(rf.getGenerateName(), this.resourceService));
+			
+			
+//			
+//			SingletionThreadPoolExecutor.getInstance().getPool()
+//					.execute(new Task(rf.getGenerateName(), this.resourceService));
 		}
 
 		// 返回当前活动的ID
@@ -330,9 +332,9 @@ public class PhotoMessageAction extends GeneralAction<ForderActivity> {
 			@RequestParam(value = "sort", defaultValue = "0") long sort) {
 		ModelAndView modelAndView = new ModelAndView();
 		if (id != null) {
-
-			String[] ids = id.split(",");
-			for (int i = 0; i < ids.length; i++) {
+			
+			String[] ids= id.split(",");
+			for(int i=0;i<ids.length;i++){
 				Resource r = this.resourceService.findOneById(ids[i], Resource.class);
 				if (r.getEditorImgInfo() == null)
 					r.setEditorImgInfo(new EditorImgBean());
@@ -347,7 +349,9 @@ public class PhotoMessageAction extends GeneralAction<ForderActivity> {
 			this.informationRegisterService.addInformationRegister(resourceName, person, photographer, resourceAddress);
 
 		}
-
+		
+		
+		
 		modelAndView.setViewName("redirect:/photoMessageAction/checkActivity/" + type + "?checkId=" + activityId);
 
 		return modelAndView;
@@ -731,149 +735,147 @@ public class PhotoMessageAction extends GeneralAction<ForderActivity> {
 
 	@SystemErrorLog(description = "查询图片出错")
 	@RequestMapping("/searchImgsByQuerys")
-	public ModelAndView searchImgsByQuerys(@RequestParam(defaultValue = "", value = "searchType") String searchType,
-			@RequestParam(defaultValue = "", value = "serachForderQuery1") String serachForderQuery1,
-			@RequestParam(defaultValue = "", value = "serachForderQueryVal1") String serachForderQueryVal1,
-			@RequestParam(defaultValue = "", value = "serachForderQuery2") String serachForderQuery2,
-			@RequestParam(defaultValue = "", value = "serachForderQueryVal2") String serachForderQueryVal2,
-			@RequestParam(defaultValue = "", value = "serachForderQuery3") String serachForderQuery3,
-			@RequestParam(defaultValue = "", value = "serachForderQueryVal3") String serachForderQueryVal3,
-			@RequestParam(defaultValue = "", value = "serachForderQuery4") String serachForderQuery4,
-			@RequestParam(defaultValue = "", value = "serachForderQueryVal4") String serachForderQueryVal4,
+	public ModelAndView searchImgsByQuerys
+		(
+			@RequestParam(defaultValue = "", value = "selectQuery") String selectQuery,
+			@RequestParam(defaultValue = "", value = "selectVal") String selectVal,
+			@RequestParam(defaultValue = "", value = "selectQuery1") String selectQuery1,
+			@RequestParam(defaultValue = "", value = "selectVal1") String selectVal1,
 			@RequestParam(value = "sort", defaultValue = "DESC") String sort,
 			@RequestParam(value = "pageNo", defaultValue = "1") int pageNo,
 			@RequestParam(value = "pageSize", defaultValue = "50") int pageSize,
 			@RequestParam(value = "time1", defaultValue = "") String time1,
 			@RequestParam(value = "time2", defaultValue = "") String time2
-
-	) {
+			
+			) {
 		ModelAndView modelAndView = new ModelAndView();
+		
+		
+	
+		if(selectQuery.equals("forderActivityName")||selectQuery1.equals("forderActivityName")||selectQuery.equals("adminUser.name")||selectQuery1.equals("adminUser.name")){
+			//模糊查询活动主题
+			if(Common.isNotEmpty(selectVal)||Common.isNotEmpty(selectVal1)){
+				if(selectQuery.equals("forderActivityDate")){
+					if(Common.isNotEmpty(time1)||Common.isNotEmpty(time2)){
+						try {
+						//查询时间段内的活动信息
+						modelAndView.setViewName("redirect:/adminUser/index?time1="+time1+"&time2="+time2+"&selectQuery="+selectQuery+"&selectVal1="+URLEncoder.encode(selectVal1, "utf-8")+"&selectQuery1="+selectQuery1);
+						} catch (UnsupportedEncodingException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+				}
+				
+				
+			
+			}else{
 
-		if (searchType.equals("searchForderActivity")) {
-			// 查询活动
-			try {
-				modelAndView.setViewName("redirect:/adminUser/index?time1=" + time1 + "&time2=" + time2
-						+ "&serachForderQuery1=" + serachForderQuery1 + "&serachForderQueryVal1="
-						+ URLEncoder.encode(serachForderQueryVal1, "utf-8") + "&serachForderQuery2="
-						+ serachForderQuery2 + "&serachForderQueryVal2="
-						+ URLEncoder.encode(serachForderQueryVal2, "utf-8") + "&searchType=" + searchType);
-			} catch (UnsupportedEncodingException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				try {
+					modelAndView.setViewName("redirect:/adminUser/index?selectVal="+URLEncoder.encode(selectVal, "utf-8")+"&selectQuery="+selectQuery+"&selectVal1="+URLEncoder.encode(selectVal1, "utf-8")+"&selectQuery1="+selectQuery1);
+				} catch (UnsupportedEncodingException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 			}
+			
+				
+				return modelAndView;
+		}/*else if(selectQuery.equals("forderActivityDate")){
+			if(Common.isNotEmpty(time1)||Common.isNotEmpty(time2)){
+				try {
+				//查询时间段内的活动信息
+				modelAndView.setViewName("redirect:/adminUser/index?time1="+time1+"&time2="+time2+"&selectQuery="+selectQuery+"&selectVal1="+URLEncoder.encode(selectVal1, "utf-8")+"&selectQuery1="+selectQuery1);
+				} catch (UnsupportedEncodingException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				return modelAndView;
+			}*/
+		}
+		
+		
+		modelAndView.setViewName("admin/photo-gallery/photoMessage/searchIndex");
 
-		} else if (searchType.equals("searchPicture")) {
-			// 检索图片
+		modelAndView.addObject("webType", "index");
 
-			modelAndView.setViewName("admin/photo-gallery/photoMessage/searchIndex");
+		Pagination<Resource> pageList = new Pagination<Resource>();
 
-			modelAndView.addObject("webType", "index");
+		Query query = new Query();
 
-			Pagination<Resource> pageList = new Pagination<Resource>();
+		if (Common.isNotEmpty(selectQuery) && Common.isNotEmpty(selectVal)||Common.isNotEmpty(selectQuery1)&&Common.isNotEmpty(selectVal1)) {
 
-			Query query = new Query();
-
-			if (Common.isNotEmpty(serachForderQuery3) && Common.isNotEmpty(serachForderQueryVal3)
-					|| Common.isNotEmpty(serachForderQuery4) && Common.isNotEmpty(serachForderQueryVal4)) {
-
+			
+			if (selectQuery.equals("forderActivityAddress")||selectQuery1.equals("forderActivityAddress")) {
+	Criteria cr = new Criteria();
+				
 				Query addressQuery = new Query();
 
-				if (serachForderQuery3.equals("forderActivityAddress")
-						|| serachForderQuery4.equals("forderActivityAddress")) {
-					// 如果有一个查询条件为forderActivityAddress
-					if (serachForderQuery3.equals("forderActivityAddress") && Common.isNotEmpty(serachForderQueryVal3)
-							&& !serachForderQuery4.equals("forderActivityAddress")) {
-
-						addressQuery.addCriteria(Criteria.where("address").regex(serachForderQueryVal3));
-
-					} else if (serachForderQuery4.equals("forderActivityAddress")
-							&& Common.isNotEmpty(serachForderQueryVal4)
-							&& !serachForderQuery3.equals("forderActivityAddress")) {
-
-						addressQuery.addCriteria(Criteria.where("address").regex(serachForderQueryVal4));
-					} else if (serachForderQuery3.equals(serachForderQuery4)
-							&& serachForderQuery3.equals("forderActivityAddress")) {
-
-						
-						Criteria cr = new Criteria();
-						Criteria ca1 = null;
-						Criteria ca2 = null;
-
-						if (Common.isNotEmpty(serachForderQueryVal3)) {
-							ca1 = Criteria.where("address").regex(serachForderQueryVal3);
-						}
-						if (Common.isNotEmpty(serachForderQueryVal4)) {
-							ca2 = Criteria.where("address").regex(serachForderQueryVal4);
-						}
-
-						if(ca1!=null&&ca2!=null){
-							addressQuery.addCriteria(cr.orOperator(ca1, ca2));
-						}else if(ca1==null||ca2==null){
-							if(ca1!=null){
-								addressQuery.addCriteria(cr.orOperator(ca1));
-							}else if(ca2!=null){
-								addressQuery.addCriteria(cr.orOperator(ca2));
-							}
-						}
-						
-					}
-					List<ForderActivity> listForderActivity = this.forderActivityService.find(addressQuery,
-							ForderActivity.class);
-
-					List<String> listIds = new ArrayList<String>();
-
-					for (ForderActivity f : listForderActivity) {
-						listIds.add(f.getId());
-					}
-					query.addCriteria(Criteria.where("forderActivityId").in(listIds));
-
-				} else {
-
-					if (Common.isNotEmpty(serachForderQuery4) && serachForderQuery3.equals(serachForderQuery4)) {
-						// 如果查询条件不为空，并且查询条件相同
-						Criteria cr = new Criteria();
-						Criteria ca1 = null;
-						Criteria ca2 = null;
-
-						if (Common.isNotEmpty(serachForderQueryVal3)) {
-							ca1 = Criteria.where(serachForderQuery3).regex(serachForderQueryVal3);
-						}
-						if (Common.isNotEmpty(serachForderQueryVal4)) {
-							ca2 = Criteria.where(serachForderQuery4).regex(serachForderQueryVal4);
-						}
-						if(ca1!=null&&ca2!=null){
-							query.addCriteria(cr.orOperator(ca1, ca2));
-						}else if(ca1==null||ca2==null){
-							if(ca1!=null){
-								query.addCriteria(cr.orOperator(ca1));
-							}else if(ca2!=null){
-								query.addCriteria(cr.orOperator(ca2));
-							}
-						}
-
-					} else if (Common.isNotEmpty(serachForderQuery3) && Common.isNotEmpty(serachForderQueryVal3)) {
-						query.addCriteria(Criteria.where(serachForderQuery3).regex(serachForderQueryVal3));
-					} else if (Common.isNotEmpty(serachForderQuery4) && Common.isNotEmpty(serachForderQueryVal4)) {
-						query.addCriteria(Criteria.where(serachForderQuery4).regex(serachForderQueryVal4));
-					}
-
+				
+				if(selectQuery.equals("forderActivityAddress")&&!selectQuery1.equals("forderActivityAddress")){
+					addressQuery.addCriteria(Criteria.where("address").regex(selectVal)).addCriteria(Criteria.where(selectQuery1).regex(selectVal1));
 				}
+				
+				if(selectQuery1.equals("forderActivityAddress")&&!selectQuery.equals("forderActivityAddress")){
+					addressQuery.addCriteria(Criteria.where("address").regex(selectVal1)).addCriteria(Criteria.where(selectQuery).regex(selectVal));
+				}
+				
+				//addressQuery.addCriteria(Criteria.where("address").regex(selectVal));
+				//addressQuery.addCriteria(cr.orOperator(Criteria.where("address").regex(selectVal),Criteria.where("address").regex(selectVal1)));
+				
+				List<ForderActivity> listForderActivity = this.forderActivityService.find(addressQuery,
+						ForderActivity.class);
 
-				query.with(new Sort((sort.equals(String.valueOf("DESC"))) ? Sort.Direction.DESC : Sort.Direction.ASC,
-						"createTime"));
+				List<String> listIds = new ArrayList<String>();
 
-				query.addCriteria(Criteria.where("personActivityId").is(null));
+				for (ForderActivity f : listForderActivity) {
+					listIds.add(f.getId());
+				}
+				query.addCriteria(Criteria.where("forderActivityId").in(listIds));
 
-				pageList = this.resourceService.findPaginationByQuery(query, pageNo, pageSize, Resource.class);
+			} else {
+//				Criteria cr = new Criteria();
 
-				modelAndView.addObject("searchList", pageList);
-				modelAndView.addObject("serachForderQueryVal3", serachForderQueryVal3);
-				modelAndView.addObject("serachForderQuery3", serachForderQuery3);
-				modelAndView.addObject("serachForderQueryVal4", serachForderQueryVal4);
-				modelAndView.addObject("serachForderQuery4", serachForderQuery4);
-				modelAndView.addObject("searchType", searchType);
+				
+				if(Common.isNotEmpty(selectQuery)&&Common.isNotEmpty(selectVal)){
+					
+					query.addCriteria(/*cr.orOperator(*/Criteria.where(selectQuery).regex(selectVal))/*)*/;
+				}
+				
+				if(!selectQuery.equals(selectQuery1)&&selectQuery!=selectQuery1){
+					if(Common.isNotEmpty(selectQuery1)&&Common.isNotEmpty(selectVal1)){
+						//query.addCriteria(Criteria.where(selectQuery1).regex(selectVal1));
+						query.addCriteria(/*cr.orOperator(*/Criteria.where(selectQuery1).regex(selectVal1))/*)*/;
+					}
+				}
+				
+				
 			}
 
+			/*
+			 * Criteria cr = new Criteria();
+			 * 
+			 * query.addCriteria(cr.orOperator(Criteria.where("originalName").
+			 * regex(selectQuery),
+			 * Criteria.where("createDate").regex(selectQuery),
+			 * Criteria.where("extensionName").regex(selectQuery),
+			 * Criteria.where("uploadPerson").regex(selectQuery),
+			 * Criteria.where("editorImgInfo.resourceName").regex(selectQuery),
+			 * Criteria.where("editorImgInfo.person").regex(selectQuery),
+			 * Criteria.where("editorImgInfo.photographer").regex(selectQuery),
+			 * Criteria.where("editorImgInfo.resourceAddress").regex(selectQuery
+			 * )));
+			 */
+			query.with(new Sort((sort.equals(String.valueOf("DESC"))) ? Sort.Direction.DESC : Sort.Direction.ASC,
+					"createTime"));
+
+			query.addCriteria(Criteria.where("personActivityId").is(null));
+
+			pageList = this.resourceService.findPaginationByQuery(query, pageNo, pageSize, Resource.class);
+			modelAndView.addObject("searchList", pageList);
+			modelAndView.addObject("selectVal", selectVal);
+			modelAndView.addObject("selectQuery", selectQuery);
+			modelAndView.addObject("selectVal1", selectVal1);
+			modelAndView.addObject("selectQuery1", selectQuery1);
 		}
 
 		return modelAndView;

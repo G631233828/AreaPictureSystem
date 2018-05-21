@@ -49,10 +49,10 @@ import org.springframework.web.servlet.ModelAndView;
 /**
  * 用户管理
  */
-@Controller
-@RequestMapping("/adminUser")
-public class AdminUserAction extends GeneralAction<AdminUser> {
-	private static final Logger log = LoggerFactory.getLogger(AdminUserAction.class);
+/*@Controller
+@RequestMapping("/adminUser")*/
+public class AdminUserAction2 extends GeneralAction<AdminUser> {
+	private static final Logger log = LoggerFactory.getLogger(AdminUserAction2.class);
 
 	@Autowired
 	private AdminUserService adminUserService;
@@ -226,184 +226,30 @@ public class AdminUserAction extends GeneralAction<AdminUser> {
 			@RequestParam(value = "type", defaultValue = "") String type,
 			@RequestParam(value = "pageNo", defaultValue = "1") int pageNo,
 			@RequestParam(value = "pageSize", defaultValue = "30") int pageSize,
-
-			@RequestParam(value = "searchType", defaultValue = "") String searchType,
-			@RequestParam(defaultValue = "", value = "serachForderQuery1") String serachForderQuery1,
-			@RequestParam(defaultValue = "", value = "serachForderQueryVal1") String serachForderQueryVal1,
-			@RequestParam(defaultValue = "", value = "serachForderQuery2") String serachForderQuery2,
-			@RequestParam(defaultValue = "", value = "serachForderQueryVal2") String serachForderQueryVal2,
+			@RequestParam(value = "selectVal", defaultValue = "") String selectVal,
+			@RequestParam(value = "selectQuery", defaultValue = "") String selectQuery,
+			@RequestParam(value = "selectVal1", defaultValue = "") String selectVal1,
+			@RequestParam(value = "selectQuery1", defaultValue = "") String selectQuery1,
 			@RequestParam(value = "time1", defaultValue = "") String time1,
 			@RequestParam(value = "time2", defaultValue = "") String time2) {
 
 		ModelAndView modelAndView = new ModelAndView();
 
-		try {
-			if (Common.isNotEmpty(serachForderQueryVal1)) {
-				serachForderQueryVal1 = URLDecoder.decode(serachForderQueryVal1, "utf-8");
+		if (Common.isNotEmpty(selectVal)) {
+			try {
+				selectVal = URLDecoder.decode(selectVal, "utf-8");
+			} catch (UnsupportedEncodingException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 			}
-			if (Common.isNotEmpty(serachForderQueryVal2)) {
-
-				serachForderQueryVal2 = URLDecoder.decode(serachForderQueryVal2, "utf-8");
-
-			}
-		} catch (UnsupportedEncodingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
 		}
-
-		// 获取所有的图片信息
-		Query query = new Query();
-
-		query.addCriteria(Criteria.where("listType.type").in(BaseType.Type.AREA, BaseType.Type.BASEUTIS,
-				BaseType.Type.DIRECTLYUTIS));
-
-		query.with(new Sort(Sort.Direction.DESC, "createTime"));
-
-		List listIds = new ArrayList();
-
-		if (serachForderQuery1.equals("name") || serachForderQuery2.equals("name")) {
-			if (!serachForderQueryVal1.equals("") || !serachForderQueryVal2.equals("")) {
-				if (serachForderQuery1.equals(serachForderQuery2)) {
-					Query q = new Query();
-					Criteria cr = new Criteria();
-					q.addCriteria(cr.orOperator(Criteria.where("name").regex(serachForderQueryVal1),
-							Criteria.where("name").regex(serachForderQueryVal2)));
-					List<AdminUser> list = this.adminUserService.find(q, AdminUser.class);
-
-					for (AdminUser user : list) {
-						listIds.add(new ObjectId(user.getId()));
-					}
-
-				} else if (serachForderQuery1.equals("name") && !serachForderQuery2.equals("name")) {
-					Query q = new Query();
-					q.addCriteria(Criteria.where("name").regex(serachForderQueryVal1));
-					List<AdminUser> list = this.adminUserService.find(q, AdminUser.class);
-
-					for (AdminUser user : list) {
-						listIds.add(new ObjectId(user.getId()));
-					}
-
-				} else if (!serachForderQuery1.equals("name") && serachForderQuery2.equals("name")) {
-					Query q = new Query();
-					q.addCriteria(Criteria.where("name").regex(serachForderQueryVal2));
-					List<AdminUser> list = this.adminUserService.find(q, AdminUser.class);
-
-					for (AdminUser user : list) {
-						listIds.add(new ObjectId(user.getId()));
-					}
-				}
-
-				if (serachForderQuery1.equals("name") && !serachForderQuery2.equals("name")) {
-
-					if (listIds.size() > 0) {
-						query.addCriteria(Criteria.where("adminUser.$id").in(listIds));
-					}
-					if (!serachForderQuery2.equals("") && !serachForderQueryVal2.equals("")
-							&& !serachForderQuery2.equals("forderActivityDate")) {
-						query.addCriteria(Criteria.where(serachForderQuery2).regex(serachForderQueryVal2));
-					} else if (serachForderQuery2.equals("forderActivityDate")) {
-						if (Common.isNotEmpty(time1) && Common.isNotEmpty(time2)) {
-							int result = Common.compare_date(time1, time2);
-							if (result == -1) {
-								String time = time1;
-								time1 = time2;
-								time2 = time;
-							}
-
-							query.addCriteria(Criteria.where("activityTime").gte(time1).lte(time2));
-						}
-						if (Common.isNotEmpty(time1) && Common.isEmpty(time2)) {
-							query.addCriteria(Criteria.where("activityTime").gte(time1));
-						}
-						if (Common.isNotEmpty(time2) && Common.isEmpty(time1)) {
-							query.addCriteria(Criteria.where("activityTime").lte(time2));
-						}
-					}
-
-				} else if (serachForderQuery2.equals("name") && !serachForderQuery1.equals("name")) {
-
-					if (listIds.size() > 0) {
-						query.addCriteria(Criteria.where("adminUser.$id").in(listIds));
-					}
-					if (!serachForderQuery1.equals("") && !serachForderQueryVal1.equals("")) {
-						query.addCriteria(Criteria.where(serachForderQuery1).regex(serachForderQueryVal1));
-					}
-
-				}
-
+		if (Common.isNotEmpty(selectVal1)) {
+			try {
+				selectVal1 = URLDecoder.decode(selectVal1, "utf-8");
+			} catch (UnsupportedEncodingException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 			}
-
-		} else {
-
-			if (Common.isNotEmpty(serachForderQuery1) || Common.isNotEmpty(serachForderQuery2)&&!serachForderQuery1.equals(serachForderQuery2)) {
-				if (serachForderQuery1.equals(serachForderQuery2) && !serachForderQuery1.equals("name")) {
-					Criteria cr = new Criteria();
-					Criteria ca1 = null;
-					Criteria ca2 = null;
-
-					if (Common.isNotEmpty(serachForderQuery2) && Common.isNotEmpty(serachForderQueryVal2)) {
-						ca2 = Criteria.where(serachForderQuery2).regex(serachForderQueryVal2);
-					}
-
-					if (Common.isNotEmpty(serachForderQuery1) && Common.isNotEmpty(serachForderQueryVal1)) {
-						ca1 = Criteria.where(serachForderQuery1).regex(serachForderQueryVal1);
-					}
-
-					if(ca1!=null&&ca2!=null){
-						query.addCriteria(cr.orOperator(ca1, ca2));
-					}else if(ca1==null||ca2==null){
-						if(ca1!=null){
-							query.addCriteria(cr.orOperator(ca1));
-						}else if(ca2!=null){
-							query.addCriteria(cr.orOperator(ca2));
-						}
-					}
-
-				} else  if(Common.isNotEmpty(serachForderQuery1)||Common.isNotEmpty(serachForderQuery2)) {
-					
-					//查询条件1 与查询条件而为日期的查询
-					if(Common.isNotEmpty(serachForderQuery1)&&Common.isNotEmpty(serachForderQueryVal1)){
-						
-						query.addCriteria(Criteria.where(serachForderQuery1).regex(serachForderQueryVal1));
-						
-					}
-					if (serachForderQuery2.equals("forderActivityDate")) {
-						if (Common.isNotEmpty(time1) && Common.isNotEmpty(time2)) {
-
-							int result = Common.compare_date(time1, time2);
-							if (result == -1) {
-								String time = time1;
-								time1 = time2;
-								time2 = time;
-
-							}
-
-							query.addCriteria(Criteria.where("activityTime").gte(time1).lte(time2));
-						}
-						if (Common.isNotEmpty(time1) && Common.isEmpty(time2)) {
-							query.addCriteria(Criteria.where("activityTime").gte(time1));
-						}
-						if (Common.isNotEmpty(time2) && Common.isEmpty(time1)) {
-							query.addCriteria(Criteria.where("activityTime").lte(time2));
-						}
-
-					} else if(Common.isNotEmpty(serachForderQuery2)&&Common.isNotEmpty(serachForderQueryVal2)) {
-						query.addCriteria(Criteria.where(serachForderQuery2).regex(serachForderQueryVal2));
-					}
-
-				}
-			}else{
-				if(Common.isNotEmpty(serachForderQuery1)&&serachForderQuery1.equals(serachForderQuery2)){
-					
-					Criteria cr = new Criteria();
-					query.addCriteria(cr.orOperator(Criteria.where(serachForderQuery1).regex(serachForderQueryVal1),
-							Criteria.where(serachForderQuery2).regex(serachForderQueryVal2)));
-				}
-				
-				
-				
-			}
-
 		}
 
 		// 查询条件反馈给页面
@@ -433,8 +279,79 @@ public class AdminUserAction extends GeneralAction<AdminUser> {
 
 		modelAndView.addObject("companyList", lac);
 
+		// 获取所有的图片信息
+		Query query = new Query();
+
+		query.addCriteria(Criteria.where("listType.type").in(BaseType.Type.AREA, BaseType.Type.BASEUTIS,
+				BaseType.Type.DIRECTLYUTIS));
+
+		query.with(new Sort(Sort.Direction.DESC, "createTime"));
+
+		/*
+		 * Criteria cr = new Criteria(); Criteria ca1 =null; Criteria ca2 =null;
+		 */
+
+		if (Common.isNotEmpty(selectQuery) || Common.isNotEmpty(selectQuery1)) {
+			if (selectQuery.equals(selectQuery1)) {
+				// 如果查询条件一样，需要将两个内容同上查出来
+				//query.addCriteria(Criteria.where(selectQuery).regex(selectVal,selectVal1));
+				
+				Criteria cr = new Criteria();
+				query.addCriteria(cr.orOperator(Criteria.where(selectQuery).regex(selectVal),
+						Criteria.where(selectQuery1).regex(selectVal1)));
+
+			} else {
+				
+				if(selectQuery.equals("forderActivityDate")){
+					if (Common.isNotEmpty(time1) && Common.isNotEmpty(time2)) {
+
+						int result = Common.compare_date(time1, time2);
+						if (result == -1) {
+							String time = time1;
+							time1 = time2;
+							time2 = time;
+
+						}
+
+						query.addCriteria(Criteria.where("createDate").gte(time1).lte(time2));
+					}
+					if (Common.isNotEmpty(time1) && Common.isEmpty(time2)) {
+						query.addCriteria(Criteria.where("createDate").gte(time1));
+					}
+					if (Common.isNotEmpty(time2) && Common.isEmpty(time1)) {
+						query.addCriteria(Criteria.where("createDate").lte(time2));
+					}
+					
+				}else{
+					if (Common.isNotEmpty(selectVal)) {
+						// ca1 =Criteria.where(selectQuery).regex(selectVal);
+						query.addCriteria(/* cr.orOperator( */Criteria.where(selectQuery).regex(selectVal))/* ) */;
+					}
+				}
+
+				if (Common.isNotEmpty(selectVal1)) {
+					/* ca2 =Criteria.where(selectQuery1).regex(selectVal1); */
+					query.addCriteria(/* cr.orOperator( */Criteria.where(selectQuery1).regex(selectVal1))/* ) */;
+				}
+			}
+		}
+
+		/*
+		 * if(ca1!=null||ca2!=null){ query.addCriteria(cr.orOperator(ca1,ca2));
+		 * }
+		 */
+
 		Pagination<ForderActivity> pagination = this.forderActivityService.findPaginationByQuery(query, pageNo,
 				pageSize, ForderActivity.class);
+
+		/*
+		 * List<ForderActivity> listforder = new ArrayList<ForderActivity>();
+		 * for(ForderActivity f : pagination.getDatas()){ //根据文件夹啊的id查询图片资源
+		 * Resource re =
+		 * this.resourceService.findListResourceByforderActivityId(f.getId());
+		 * f.setShowImg(re!=null?re.getId():null); listforder.add(f); }
+		 * pagination.setDatas(listforder);
+		 */
 
 		modelAndView.addObject("forderActivityList", pagination);
 
@@ -447,17 +364,13 @@ public class AdminUserAction extends GeneralAction<AdminUser> {
 			listsort = this.statisticsService.sortfindUserUploadsNum(statisticsList);
 		}
 		modelAndView.addObject("listsort", listsort);
-
-		modelAndView.addObject("searchType", searchType);
-		modelAndView.addObject("serachForderQuery1", serachForderQuery1);
-		modelAndView.addObject("serachForderQueryVal1", serachForderQueryVal1);
-		modelAndView.addObject("serachForderQuery2", serachForderQuery2);
-		modelAndView.addObject("serachForderQueryVal2", serachForderQueryVal2);
+		modelAndView.addObject("selectVal", selectVal);
+		modelAndView.addObject("selectQuery", selectQuery);
+		modelAndView.addObject("selectVal1", selectVal1);
+		modelAndView.addObject("selectQuery1", selectQuery1);
 		modelAndView.addObject("time1", time1);
 		modelAndView.addObject("time2", time2);
-
 		return modelAndView;// 返回
-
 	}
 
 	/**

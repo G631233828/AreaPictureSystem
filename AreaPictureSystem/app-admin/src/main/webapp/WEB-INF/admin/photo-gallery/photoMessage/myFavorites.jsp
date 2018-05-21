@@ -186,7 +186,7 @@
 										<c:forEach items="${pagination.datas}" var="item"
 											varStatus="status">
 
-											<li>
+											<li class="collection_${item.id }">
 												<!-- 已经将点击预览移植到图片层中 -->
 												<div class="file-box">
 													<div class="checkbox" name="checkboxs"
@@ -205,7 +205,7 @@
 														<img alt="image" class="img-responsive"
 															style="margin: 0 auto; width: 258px; height: 172px;"
 															onclick="return findImg('${item.id}')"
-															src="${pageContext.request.contextPath}/file/getImg/${item.id}?type=">
+															src="${pageContext.request.contextPath}/file/getImg/${item.id}?type=max">
 													</div>
 
 

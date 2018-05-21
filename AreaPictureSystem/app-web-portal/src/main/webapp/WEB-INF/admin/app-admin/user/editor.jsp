@@ -142,7 +142,7 @@
 										<div class="col-sm-5">
 											<label class="col-sm-4 control-label">用户类型</label>
 											<div class="col-sm-8 form-group">
-												<select class="form-control" name="userType" id="userType" required>
+												<select class="form-control" name="type" id="type" required>
 													<option id="" value=""></option>
 													<option id="USER" value="TEACHER">普通用户</option>
 											<%-- 	<c:if test="${sessionScope.userSession.userType eq 'ADMINISTRATORS' }"> --%>
@@ -179,9 +179,6 @@
 											</div>
 										</div>
 									</div>-->
-									
-									
-										<div class="hr-line-dashed"></div>
 									
 										<div class="row">
 										<div class="col-sm-5">

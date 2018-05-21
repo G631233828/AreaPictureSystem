@@ -6,89 +6,6 @@
 
 <body>
 
-
-	<%-- 
-<!-- 创建活动 -->
-<div class="modal inmodal" id="CrateActivity" tabindex="-1" role="dialog" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content animated bounceInRight">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal">
-                    <span aria-hidden="true">&times;</span><span class="sr-only">关闭</span>
-                </button>
-                <h4 class="modal-title">创建活动／文件夹</h4>
-            </div>
-
-            <form method="post" id="signupForm" action="../createActivity/${webType}">
-                <div class="modal-body">
-                    <div class="form-group">
-									<label>活动名称：</label><label for="forderActivityName"
-										id="forforderActivityName" class="control-label"
-										style="color: red; float: right;"></label> <input type="text"
-										placeholder="请输入活动名称" name="forderActivityName"
-										onchange="return getrepletes('forderActivityName');" 
-										onkeyup="return getrepletes('forderActivityName');"
-										id="forderActivityName" class="form-control" required>
-								</div>
-								<input type="hidden" id="forderActivityNamehid">
-
-								<div class="form-group">
-									<label>活动地址：</label> <input type="text" placeholder="活动地址"
-										name="address" id="address" class="form-control">
-								</div>
-
-
-							<!-- 	<div class="form-group">
-									<label>图片上传最大数量：</label> <input type="text"
-										placeholder="图片上传最大数量" name="sumPotoCount" id="sumPotoCount"
-										class="form-control" required>
-								</div> -->
-
-								<c:if
-									test="${sessionScope.userSession.userType eq 'ADMINISTRATORS' && webType eq 'BASEUTIS'}">
-									<div class="form-group" onchange="return getrepletes('forderActivityName');">
-										<label>活动所属学校：</label> <select id="boundCompany" class="form-control m-b"
-											name="boundCompany" >
-											<c:forEach items="${listAdminCompany}" var="item" varStatus="status">
-												<option id="${item.id}" value="${item.id}">${item.name}</option>
-											</c:forEach>
-										</select>
-									</div>
-								</c:if>
-
-
-
-								<div class="form-group">
-									<label>活动时间：</label> <input type="text" placeholder="活动时间"
-										name="activityTime" id="activityTime" readonly="readonly"
-										class="form-control datainput" data-date-format="yyyy-mm-dd" required>
-								</div>
-
-
-
-								<div class="form-group">
-									<label>描述：</label>
-									<textarea rows="5" cols="7"
-										style="resize: none; overflow: scroll;" placeholder="描述"
-										name="description" id="description" class="form-control"></textarea>
-								</div>
-								   <input  type="hidden" name="boundId" id="boundId" value="${sessionScope.userSession.id}">
-                                    <c:if test="${sessionScope.userSession.userType != 'ADMINISTRATORS' }">
-                                        <input  type="hidden" name="boundCompany" id="boundCompany" value="${sessionScope.userSession.adminCompany.id}">
-
-                                    </c:if>
-                       			   <input  type="hidden" name="parentId" id="parentId" value="0">
-                       			   <input  type="hidden" name="type"  id="type" value="${webType}">
-            		    </div>
-           		     <div class="modal-footer">
-               		     <button type="submit" id="submit" class="btn btn-primary">保存</button>
-              		  </div>
-            </form>
-        </div>
-    </div>
-</div> --%>
-
-
 	<!-- 图片编缉 -->
 
 	<div class="modal inmodal" id="File_Made" tabindex="-1" role="dialog"
@@ -134,10 +51,6 @@
 								</div>
 							</div>
 						</div>
-
-
-
-
 
 						<div class="form-group">
 							<label>主要人物</label>
@@ -198,9 +111,8 @@
 								</div>
 							</div>
 						</div>
-						<input type="hidden" id="made_id" name="id"> <input
-							type="hidden" name="activityId"
-							value="${sessionScope.checkActivityId}">
+						<input type="hidden" id="made_id" name="id">
+						 <input 	type="hidden" name="activityId" value="${sessionScope.checkActivityId}">
 
 
 						<div class="form-group">
