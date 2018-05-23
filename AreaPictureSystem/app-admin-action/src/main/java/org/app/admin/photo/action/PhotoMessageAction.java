@@ -773,110 +773,100 @@ public class PhotoMessageAction extends GeneralAction<ForderActivity> {
 
 			Query query = new Query();
 
-			if (Common.isNotEmpty(serachForderQuery3) && Common.isNotEmpty(serachForderQueryVal3)
-					|| Common.isNotEmpty(serachForderQuery4) && Common.isNotEmpty(serachForderQueryVal4)) {
+			Query addressQuery = new Query();
 
-				Query addressQuery = new Query();
-
-				if (serachForderQuery3.equals("forderActivityAddress")
-						|| serachForderQuery4.equals("forderActivityAddress")) {
-					// 如果有一个查询条件为forderActivityAddress
-					if (serachForderQuery3.equals("forderActivityAddress") && Common.isNotEmpty(serachForderQueryVal3)
-							&& !serachForderQuery4.equals("forderActivityAddress")) {
-
-						addressQuery.addCriteria(Criteria.where("address").regex(serachForderQueryVal3));
-
-					} else if (serachForderQuery4.equals("forderActivityAddress")
-							&& Common.isNotEmpty(serachForderQueryVal4)
-							&& !serachForderQuery3.equals("forderActivityAddress")) {
-
-						addressQuery.addCriteria(Criteria.where("address").regex(serachForderQueryVal4));
-					} else if (serachForderQuery3.equals(serachForderQuery4)
-							&& serachForderQuery3.equals("forderActivityAddress")) {
-
-						
-						Criteria cr = new Criteria();
-						Criteria ca1 = null;
-						Criteria ca2 = null;
-
-						if (Common.isNotEmpty(serachForderQueryVal3)) {
-							ca1 = Criteria.where("address").regex(serachForderQueryVal3);
-						}
-						if (Common.isNotEmpty(serachForderQueryVal4)) {
-							ca2 = Criteria.where("address").regex(serachForderQueryVal4);
-						}
-
-						if(ca1!=null&&ca2!=null){
-							addressQuery.addCriteria(cr.orOperator(ca1, ca2));
-						}else if(ca1==null||ca2==null){
-							if(ca1!=null){
-								addressQuery.addCriteria(cr.orOperator(ca1));
-							}else if(ca2!=null){
-								addressQuery.addCriteria(cr.orOperator(ca2));
-							}
-						}
-						
+			if (serachForderQuery3.equals("forderActivityAddress") || serachForderQuery4.equals("forderActivityAddress")) {
+				if (serachForderQuery3.equals("forderActivityAddress") && !serachForderQuery4.equals("forderActivityAddress")) {
+					addressQuery.addCriteria(Criteria.where("address").regex(serachForderQueryVal3));
+					if (Common.isNotEmpty(serachForderQuery4) && Common.isNotEmpty(serachForderQueryVal4)) {
+						query.addCriteria(Criteria.where(serachForderQuery4).regex(serachForderQueryVal4));
 					}
-					List<ForderActivity> listForderActivity = this.forderActivityService.find(addressQuery,
-							ForderActivity.class);
+				} else if (!serachForderQuery3.equals("forderActivityAddress") && serachForderQuery4.equals("forderActivityAddress")) {
+					addressQuery.addCriteria(Criteria.where("address").regex(serachForderQueryVal4));
+					if (Common.isNotEmpty(serachForderQuery3) && Common.isNotEmpty(serachForderQueryVal3)) {
+						query.addCriteria(Criteria.where(serachForderQuery3).regex(serachForderQueryVal3));
+					}
+				} else if (serachForderQuery3.equals("forderActivityAddress") && serachForderQuery4.equals("forderActivityAddress")) {
+					serachEqual(serachForderQuery3, serachForderQueryVal3, serachForderQuery4, serachForderQueryVal4,
+							addressQuery);
+				}
 
+				List<ForderActivity> listForderActivity = this.forderActivityService.find(addressQuery,
+						ForderActivity.class);
+
+				if (listForderActivity.size() > 0) {
 					List<String> listIds = new ArrayList<String>();
 
 					for (ForderActivity f : listForderActivity) {
 						listIds.add(f.getId());
 					}
+
 					query.addCriteria(Criteria.where("forderActivityId").in(listIds));
-
-				} else {
-
-					if (Common.isNotEmpty(serachForderQuery4) && serachForderQuery3.equals(serachForderQuery4)) {
-						// 如果查询条件不为空，并且查询条件相同
-						Criteria cr = new Criteria();
-						Criteria ca1 = null;
-						Criteria ca2 = null;
-
-						if (Common.isNotEmpty(serachForderQueryVal3)) {
-							ca1 = Criteria.where(serachForderQuery3).regex(serachForderQueryVal3);
-						}
-						if (Common.isNotEmpty(serachForderQueryVal4)) {
-							ca2 = Criteria.where(serachForderQuery4).regex(serachForderQueryVal4);
-						}
-						if(ca1!=null&&ca2!=null){
-							query.addCriteria(cr.orOperator(ca1, ca2));
-						}else if(ca1==null||ca2==null){
-							if(ca1!=null){
-								query.addCriteria(cr.orOperator(ca1));
-							}else if(ca2!=null){
-								query.addCriteria(cr.orOperator(ca2));
-							}
-						}
-
-					} else if (Common.isNotEmpty(serachForderQuery3) && Common.isNotEmpty(serachForderQueryVal3)) {
+				}else{
+					
+					query.addCriteria(Criteria.where("forderActivityId").is(null));
+				}
+			}else{
+				
+				if(serachForderQuery3.equals(serachForderQuery4)&&Common.isNotEmpty(serachForderQuery3)){
+					serachEqual(serachForderQuery3, serachForderQueryVal3, serachForderQuery4, serachForderQueryVal4,
+							query);
+				}else{
+					
+					if(Common.isNotEmpty(serachForderQuery3)&&Common.isNotEmpty(serachForderQueryVal3)){
 						query.addCriteria(Criteria.where(serachForderQuery3).regex(serachForderQueryVal3));
-					} else if (Common.isNotEmpty(serachForderQuery4) && Common.isNotEmpty(serachForderQueryVal4)) {
+					}
+					if(Common.isNotEmpty(serachForderQuery4)&&Common.isNotEmpty(serachForderQueryVal4)){
 						query.addCriteria(Criteria.where(serachForderQuery4).regex(serachForderQueryVal4));
 					}
-
 				}
-
-				query.with(new Sort((sort.equals(String.valueOf("DESC"))) ? Sort.Direction.DESC : Sort.Direction.ASC,
-						"createTime"));
-
-				query.addCriteria(Criteria.where("personActivityId").is(null));
-
-				pageList = this.resourceService.findPaginationByQuery(query, pageNo, pageSize, Resource.class);
-
-				modelAndView.addObject("searchList", pageList);
-				modelAndView.addObject("serachForderQueryVal3", serachForderQueryVal3);
-				modelAndView.addObject("serachForderQuery3", serachForderQuery3);
-				modelAndView.addObject("serachForderQueryVal4", serachForderQueryVal4);
-				modelAndView.addObject("serachForderQuery4", serachForderQuery4);
-				modelAndView.addObject("searchType", searchType);
+				
+				
 			}
 
+			query.with(new Sort((sort.equals(String.valueOf("DESC"))) ? Sort.Direction.DESC : Sort.Direction.ASC,
+					"createTime"));
+
+			query.addCriteria(Criteria.where("personActivityId").is(null));
+
+			pageList = this.resourceService.findPaginationByQuery(query, pageNo, pageSize, Resource.class);
+			modelAndView.addObject("searchList", pageList);
+
+		} else {
+			modelAndView.setViewName("redirect:/adminUser/index");
+		}
+		modelAndView.addObject("serachForderQueryVal3", serachForderQueryVal3);
+		modelAndView.addObject("serachForderQuery3", serachForderQuery3);
+		modelAndView.addObject("serachForderQueryVal4", serachForderQueryVal4);
+		modelAndView.addObject("serachForderQuery4", serachForderQuery4);
+		modelAndView.addObject("searchType", searchType);
+		return modelAndView;
+	}
+
+	private void serachEqual(String serachForderQuery1, String serachForderQueryVal1, String serachForderQuery2,
+			String serachForderQueryVal2, Query q) {
+		Criteria cr = new Criteria();
+
+		Criteria ca1 = null;
+		Criteria ca2 = null;
+
+		if (Common.isNotEmpty(serachForderQuery2) && Common.isNotEmpty(serachForderQueryVal2)) {
+			ca2 = Criteria.where(serachForderQuery2).regex(serachForderQueryVal2);
 		}
 
-		return modelAndView;
+		if (Common.isNotEmpty(serachForderQuery1) && Common.isNotEmpty(serachForderQueryVal1)) {
+			ca1 = Criteria.where(serachForderQuery1).regex(serachForderQueryVal1);
+		}
+
+		if (ca1 != null && ca2 != null) {
+			q.addCriteria(cr.orOperator(ca1, ca2));
+		} else if (ca1 == null || ca2 == null) {
+			if (ca1 != null) {
+				q.addCriteria(cr.orOperator(ca1));
+			} else if (ca2 != null) {
+				q.addCriteria(cr.orOperator(ca2));
+			}
+		}
 	}
 
 }

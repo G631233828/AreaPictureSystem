@@ -51,7 +51,8 @@ public class AdminCompanyService extends GeneralServiceImpl<AdminCompany> {
 	public List<AdminCompany> listCompay() {
 
 		Query query = new Query();
-
+		
+		query.addCriteria(Criteria.where("isDelete").is(false));
 		List<AdminCompany> listAdminCompany = this.find(query, AdminCompany.class);
 
 		if(listAdminCompany.size()>0)

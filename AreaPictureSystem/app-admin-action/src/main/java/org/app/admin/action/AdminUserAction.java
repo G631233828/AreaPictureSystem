@@ -1,13 +1,17 @@
 package org.app.admin.action;
 
+import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.app.admin.annotation.SystemControllerLog;
 import org.app.admin.annotation.SystemErrorLog;
 import org.app.admin.pojo.AdminCompany;
@@ -219,6 +223,7 @@ public class AdminUserAction extends GeneralAction<AdminUser> {
 	@RequestMapping(value = "/index", produces = MediaType.TEXT_PLAIN_VALUE + ";charset=utf-8")
 	public ModelAndView index(HttpSession session,
 			@RequestParam(value = "companyName", defaultValue = "") String companyName,
+			@RequestParam(value = "companySort", defaultValue = "") String companySort,
 			@RequestParam(value = "forderActivityName", defaultValue = "") String forderActivityName,
 			@RequestParam(value = "month", defaultValue = "") String month,
 			@RequestParam(value = "start", defaultValue = "") String start,
@@ -263,11 +268,14 @@ public class AdminUserAction extends GeneralAction<AdminUser> {
 
 		if (serachForderQuery1.equals("name") || serachForderQuery2.equals("name")) {
 			if (!serachForderQueryVal1.equals("") || !serachForderQueryVal2.equals("")) {
-				if (serachForderQuery1.equals(serachForderQuery2)) {
+				if (serachForderQuery1.equals(serachForderQuery2)&&serachForderQuery1.equals("name")) {
 					Query q = new Query();
-					Criteria cr = new Criteria();
+					serachEqual(serachForderQuery1, serachForderQueryVal1, serachForderQuery2, serachForderQueryVal2,q);
+				/*	
+					
+					
 					q.addCriteria(cr.orOperator(Criteria.where("name").regex(serachForderQueryVal1),
-							Criteria.where("name").regex(serachForderQueryVal2)));
+							Criteria.where("name").regex(serachForderQueryVal2)));*/
 					List<AdminUser> list = this.adminUserService.find(q, AdminUser.class);
 
 					for (AdminUser user : list) {
@@ -295,9 +303,9 @@ public class AdminUserAction extends GeneralAction<AdminUser> {
 
 				if (serachForderQuery1.equals("name") && !serachForderQuery2.equals("name")) {
 
-					if (listIds.size() > 0) {
+				/*	if (listIds.size() > 0) {
 						query.addCriteria(Criteria.where("adminUser.$id").in(listIds));
-					}
+					}*/
 					if (!serachForderQuery2.equals("") && !serachForderQueryVal2.equals("")
 							&& !serachForderQuery2.equals("forderActivityDate")) {
 						query.addCriteria(Criteria.where(serachForderQuery2).regex(serachForderQueryVal2));
@@ -322,42 +330,27 @@ public class AdminUserAction extends GeneralAction<AdminUser> {
 
 				} else if (serachForderQuery2.equals("name") && !serachForderQuery1.equals("name")) {
 
-					if (listIds.size() > 0) {
+					/*if (listIds.size() > 0) {
 						query.addCriteria(Criteria.where("adminUser.$id").in(listIds));
-					}
+					}*/
 					if (!serachForderQuery1.equals("") && !serachForderQueryVal1.equals("")) {
 						query.addCriteria(Criteria.where(serachForderQuery1).regex(serachForderQueryVal1));
 					}
 
 				}
 
+				
+				if (listIds.size() > 0) {
+					query.addCriteria(Criteria.where("adminUser.$id").in(listIds));
+				}
 			}
 
 		} else {
 
 			if (Common.isNotEmpty(serachForderQuery1) || Common.isNotEmpty(serachForderQuery2)&&!serachForderQuery1.equals(serachForderQuery2)) {
 				if (serachForderQuery1.equals(serachForderQuery2) && !serachForderQuery1.equals("name")) {
-					Criteria cr = new Criteria();
-					Criteria ca1 = null;
-					Criteria ca2 = null;
-
-					if (Common.isNotEmpty(serachForderQuery2) && Common.isNotEmpty(serachForderQueryVal2)) {
-						ca2 = Criteria.where(serachForderQuery2).regex(serachForderQueryVal2);
-					}
-
-					if (Common.isNotEmpty(serachForderQuery1) && Common.isNotEmpty(serachForderQueryVal1)) {
-						ca1 = Criteria.where(serachForderQuery1).regex(serachForderQueryVal1);
-					}
-
-					if(ca1!=null&&ca2!=null){
-						query.addCriteria(cr.orOperator(ca1, ca2));
-					}else if(ca1==null||ca2==null){
-						if(ca1!=null){
-							query.addCriteria(cr.orOperator(ca1));
-						}else if(ca2!=null){
-							query.addCriteria(cr.orOperator(ca2));
-						}
-					}
+					serachEqual(serachForderQuery1, serachForderQueryVal1, serachForderQuery2, serachForderQueryVal2,
+							query);
 
 				} else  if(Common.isNotEmpty(serachForderQuery1)||Common.isNotEmpty(serachForderQuery2)) {
 					
@@ -399,16 +392,16 @@ public class AdminUserAction extends GeneralAction<AdminUser> {
 					query.addCriteria(cr.orOperator(Criteria.where(serachForderQuery1).regex(serachForderQueryVal1),
 							Criteria.where(serachForderQuery2).regex(serachForderQueryVal2)));
 				}
-				
-				
-				
 			}
-
 		}
 
 		// 查询条件反馈给页面
 		if (Common.isNotEmpty(companyName)) {
 			modelAndView.addObject("companyId", companyName);
+		}
+		// 查询条件反馈给页面
+		if (Common.isNotEmpty(companySort)) {
+			modelAndView.addObject("companySort", companySort);
 		}
 		if (Common.isNotEmpty(forderActivityName)) {
 			modelAndView.addObject("forderActivityName", forderActivityName);
@@ -437,17 +430,35 @@ public class AdminUserAction extends GeneralAction<AdminUser> {
 				pageSize, ForderActivity.class);
 
 		modelAndView.addObject("forderActivityList", pagination);
+		
+		
+		if(Common.isEmpty(companyName)){
+			if(Common.isNotEmpty(companySort)){
+				companyName = companySort;
+			}
+		}
+		
+		
+		
 
 		// 获取所有的统计
 		Map<AdminUser, Integer> statisticsList = this.statisticsService.findUserUploadsNum(companyName,
 				forderActivityName, start, end, month);
 
+		
 		List<SortBean> listsort = null;
 		if (statisticsList != null) {
-			listsort = this.statisticsService.sortfindUserUploadsNum(statisticsList);
+			listsort = this.statisticsService.sortfindUserUploadsNum(statisticsList,companyName);
 		}
+		
+		
+		
+		
+		
+		
 		modelAndView.addObject("listsort", listsort);
-
+		
+		
 		modelAndView.addObject("searchType", searchType);
 		modelAndView.addObject("serachForderQuery1", serachForderQuery1);
 		modelAndView.addObject("serachForderQueryVal1", serachForderQueryVal1);
@@ -458,6 +469,32 @@ public class AdminUserAction extends GeneralAction<AdminUser> {
 
 		return modelAndView;// 返回
 
+	}
+
+	private void serachEqual(String serachForderQuery1, String serachForderQueryVal1, String serachForderQuery2,
+			String serachForderQueryVal2, Query q) {
+		Criteria cr = new Criteria();
+		
+		Criteria ca1 = null;
+		Criteria ca2 = null;
+
+		if (Common.isNotEmpty(serachForderQuery2) && Common.isNotEmpty(serachForderQueryVal2)) {
+			ca2 = Criteria.where(serachForderQuery2).regex(serachForderQueryVal2);
+		}
+
+		if (Common.isNotEmpty(serachForderQuery1) && Common.isNotEmpty(serachForderQueryVal1)) {
+			ca1 = Criteria.where(serachForderQuery1).regex(serachForderQueryVal1);
+		}
+
+		if(ca1!=null&&ca2!=null){
+			q.addCriteria(cr.orOperator(ca1, ca2));
+		}else if(ca1==null||ca2==null){
+			if(ca1!=null){
+				q.addCriteria(cr.orOperator(ca1));
+			}else if(ca2!=null){
+				q.addCriteria(cr.orOperator(ca2));
+			}
+		}
 	}
 
 	/**
@@ -651,5 +688,85 @@ public class AdminUserAction extends GeneralAction<AdminUser> {
 		return BasicDataResult.build(200, "", false);
 
 	}
+	
+	
+	
+	
+	
+	/**
+	 * 导出excel
+	 * 
+	 * @param request
+	 * @param response
+	 * @throws Exception
+	 */
+
+	@RequestMapping(value = "/toexport")
+	public void exportExcel(HttpServletRequest request, HttpServletResponse response,
+			@RequestParam(value = "companyName", defaultValue = "") String companyName,
+			@RequestParam(value = "companySort", defaultValue = "") String companySort,
+			@RequestParam(value = "forderActivityName", defaultValue = "") String forderActivityName,
+			@RequestParam(value = "month", defaultValue = "") String month,
+			@RequestParam(value = "start", defaultValue = "") String start,
+			@RequestParam(value = "end", defaultValue = "") String end,
+			HttpSession session)
+					throws Exception {
+	
+
+		
+		// 获取所有的统计
+		Map<AdminUser, Integer> statisticsList = this.statisticsService.findUserUploadsNum(companyName,
+				forderActivityName, start, end, month);
+		
+		if(Common.isEmpty(companyName)){
+			if(Common.isNotEmpty(companySort)){
+				companyName = companySort;
+			}
+		}
+		
+		
+		
+		List<SortBean> listsort = null;
+		if (statisticsList != null) {
+			listsort = this.statisticsService.sortfindUserUploadsNum(statisticsList,companyName);
+		}
+		
+		HSSFWorkbook wb = this.adminUserService.export(listsort,companyName,forderActivityName, start, end, month);
+
+		
+		response.setContentType("application/vnd.ms-excel");
+
+		String fileName=new String( (Common.getDateNow()+"图片库上传统计.xls").getBytes("gb2312"), "ISO8859-1"); 
+		
+		response.setHeader("Content-disposition", "attachment;filename="+fileName);
+		OutputStream ouputStream = response.getOutputStream();
+		wb.write(ouputStream);
+		ouputStream.flush();
+		ouputStream.close();
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 
 }

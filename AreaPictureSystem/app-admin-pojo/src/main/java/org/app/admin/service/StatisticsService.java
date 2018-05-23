@@ -15,6 +15,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.app.admin.pojo.AdminCompany;
 import org.app.admin.pojo.AdminUser;
 import org.app.admin.pojo.ForderActivity;
 import org.app.admin.pojo.Resource;
@@ -22,6 +23,7 @@ import org.app.admin.util.BaseType;
 import org.app.admin.util.BasesultBean;
 import org.app.admin.util.SortBean;
 import org.app.framework.util.Common;
+import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
@@ -52,7 +54,7 @@ public class StatisticsService {
 	/**
 	 * 
 	 * @Title: getUploadFileNum @Description: TODO(获取企业上传图片的数量) @param @return
-	 * 设定文件 @return int 返回类型 @throws
+	 *         设定文件 @return int 返回类型 @throws
 	 */
 	public int getUploadFileNum(String companyId) {
 
@@ -69,7 +71,7 @@ public class StatisticsService {
 	/**
 	 * 
 	 * @Title: sortUpload @Description: TODO(根据上传数量排行) @param @return
-	 * 设定文件 @return List<uploadStatistics> 返回类型 @throws
+	 *         设定文件 @return List<uploadStatistics> 返回类型 @throws
 	 */
 	public <T extends SortBean> List<T> sortupload(String id, String bs) {
 		List<T> lus = new ArrayList<>();
@@ -135,9 +137,9 @@ public class StatisticsService {
 	 */
 	public <T extends SortBean> List<T> sort(List<T> lup) {
 		Collections.sort(lup);
-		if (lup.size() >= 10) {
-			lup = lup.subList(0, 10);
-		}
+		/*
+		 * if (lup.size() >= 10) { lup = lup.subList(0, 10); }
+		 */
 		int num = 1;
 		for (T t : lup) {
 			t.setSortnum(num);
@@ -201,105 +203,126 @@ public class StatisticsService {
 	/**
 	 * 
 	 * @Title: findUserUploadsNum @Description: TODO(获取每个用户的上传数量) @param @return
-	 * 设定文件 @return List<Map<String,Integer>> 返回类型 @throws
+	 *         设定文件 @return List<Map<String,Integer>> 返回类型 @throws
 	 */
-	public Map<AdminUser,Integer> findUserUploadsNum(String companyId,String forderActivityName,String start,String end,String month) {
-		List<ForderActivity> listForderActivity=null;
-		
-		if(Common.isNotEmpty(forderActivityName)){
-		//根据活动名称查询所有的活动
+	public Map<AdminUser, Integer> findUserUploadsNum(String companyId, String forderActivityName, String start,
+			String end, String month) {
+		List<ForderActivity> listForderActivity = null;
+
+		if (Common.isNotEmpty(forderActivityName)) {
+			// 根据活动名称查询所有的活动
 			listForderActivity = this.forderActivityService.findForderActivityByName(forderActivityName);
-		
-		if(listForderActivity==null)
-			return null;
+
+			if (listForderActivity == null)
+				return null;
 		}
-		
-		// 获取除超级管理员以外的所有用户
+
+		// 获取所有用户
 		List<AdminUser> listUsers = this.adminUserService.listUsers(companyId);
-		
-		//定义一个map集合
-		Map<AdminUser,Integer> map = new HashMap<AdminUser,Integer>();
-		
+
+		// 定义一个map集合
+		Map<AdminUser, Integer> map = new HashMap<AdminUser, Integer>();
+
 		List<String> listforderActivityIds = new ArrayList<String>();
 
 		if (listUsers != null) {
 			// 遍历所有用户
-			for (AdminUser user : listUsers) {//AdminUser
+			for (AdminUser user : listUsers) {// AdminUser
 
 				Query query = new Query();
-
-			
-				
 				query.addCriteria(Criteria.where("personActivityId").is(null))
 						.addCriteria(Criteria.where("boundId").is(user.getId()));
-				
-												  
-
-				if(Common.isNotEmpty(start)&&Common.isNotEmpty(end)){
-				
+				if (Common.isNotEmpty(start) && Common.isNotEmpty(end)) {
 					int result = Common.compare_date(start, end);
-					
-					if(result >0){
+					if (result > 0) {
 						query.addCriteria(Criteria.where("createDate").gte(start).lte(end));
-					}else if(result == 0){
+					} else if (result == 0) {
 						query.addCriteria(Criteria.where("createDate").is(start));
 					}
-				
 				}
-				
-				if(Common.isNotEmpty(month)&&(Common.isEmpty(start)||Common.isEmpty(end))){
+				if (Common.isNotEmpty(month) && (Common.isEmpty(start) || Common.isEmpty(end))) {
+					query.addCriteria(Criteria.where("createDate").gte(Common.getDateByLastMonth(month))
+							.lte(Common.getDateNow()));
+				}
 
-					query.addCriteria(Criteria.where("createDate").gte(Common.getDateByLastMonth(month)).lte(Common.getDateNow()));
-				
-				}
-				
-				
-				//如果活动不为空 
-				if(listForderActivity != null){
-					for(ForderActivity list:listForderActivity){
+				// 如果活动不为空
+				if (listForderActivity != null) {
+					for (ForderActivity list : listForderActivity) {
 						listforderActivityIds.add(list.getId());
 					}
-					//匹配所有属于listforderActivityIds 中的id
+					// 匹配所有属于listforderActivityIds 中的id
 					query.addCriteria(Criteria.where("forderActivityId").in(listforderActivityIds));
 				}
-				//查询
-				List<Resource> listResource=this.resourceService.find(query, Resource.class);
-				
-				map.put(user, listResource.size()>0?listResource.size():0);
-				
-			
-				
-			}//AdminUser
+				// 查询
+				List<Resource> listResource = this.resourceService.find(query, Resource.class);
+
+				map.put(user, listResource.size() > 0 ? listResource.size() : 0);
+
+			} // AdminUser
 
 		}
-		
+
 		return map;
 
 	}
-	
-	
-	
-	
-	public <T extends SortBean> List<T> sortfindUserUploadsNum(Map<AdminUser,Integer> map){
-		
+
+	public <T extends SortBean> List<T> sortfindUserUploadsNum(Map<AdminUser, Integer> map, String companyName) {
+
 		List<T> lus = new ArrayList<>();
 		// 区域
-		
-			for(AdminUser key:map.keySet()){
+
+		// 查询企业排序
+		if (companyName.equals("allCompany")) {
+			// 查询所有企业
+
+			Query query = new Query();
+			query.addCriteria(Criteria.where("isDelete").is(false));
+			List<AdminCompany> listCompany = this.adminComanyService.find(query, AdminCompany.class);
+
+			for (AdminCompany company : listCompany) {
+
+				int alluploadNum = 0;
+				int allForderActivity = 0;
+				T t = (T) new SortBean();
+				for (AdminUser key : map.keySet()) {
+					AdminUser adminUser = key;
+					if (company.getId().equals(adminUser.getAdminCompany().getId())) {
+						t.setAdminUser(adminUser);
+						// 通过用户的id查询活动数量
+						Query query2 = new Query();
+						query2.addCriteria(Criteria.where("adminUser.$id").is(new ObjectId(adminUser.getId())));
+						List<ForderActivity> list = this.forderActivityService.find(query2, ForderActivity.class);
+						// 通过企业的ID来判断查询出来的用户中的企业id进行叠加操作
+						alluploadNum = alluploadNum + map.get(key);
+						allForderActivity = allForderActivity + list.size();
+					}
+				}
+				t.setUploadnum(alluploadNum);
+				t.setForderActivityNum(allForderActivity);
+				lus.add(t);
+
+			}
+		} else {
+			for (AdminUser key : map.keySet()) {
+
+				AdminUser adminUser = key;
+				// 通过用户的id查询活动数量
+				Query query = new Query();
+				query.addCriteria(Criteria.where("adminUser.$id").is(new ObjectId(adminUser.getId())));
+				List<ForderActivity> list = this.forderActivityService.find(query, ForderActivity.class);
 				T t = (T) new SortBean();
 				t.setName(key.getName());
 				t.setAdminUser(key);
 				t.setUploadnum(map.get(key));
-			lus.add(t);
-			
+				t.setForderActivityNum(list.size());
+				lus.add(t);
+
+			}
+
 		}
-		
+
 		return sort(lus);
-		
+
 	}
-	
-	
-	
-	
 
 }

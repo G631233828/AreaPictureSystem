@@ -173,7 +173,8 @@
 				<div style="text-align: center; margin-bottom: 5px;">
 					<c:if test="${not empty resourcelist.datas}">
 						<div class="btn-group" style="margin: 0 auto;">
-							<a
+						<!-- &searchType=${searchType}&serachForderQuery1=${serachForderQuery1}&serachForderQuery2=${serachForderQuery2}&serachForderQueryVal1=${serachForderQueryVal1}&serachForderQueryVal2=${serachForderQueryVal2}&time1=${time1}&time2=${time2}
+					 -->		<a
 								href="${pageContext.request.contextPath}/adminUser/findPictures/${id }?pageNo=${resourcelist.upPage}"
 								type="button" class="btn btn-white"> <i
 								class="fa fa-chevron-left"></i>

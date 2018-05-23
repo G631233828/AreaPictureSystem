@@ -112,7 +112,7 @@
 					<c:if test="${not empty forderActivityList.datas}">
 						<div class="btn-group" style="margin: 0 auto;margin-top: 30px;margin-bottom: 10px;">
 							<a
-								href="${pageContext.request.contextPath}/adminUser/index/${id }?pageNo=${forderActivityList.upPage}&time1=${time1}&time2=${time2}&selectVal=${selectVal}&selectQuery=${selectQuery}"
+								href="${pageContext.request.contextPath}/adminUser/index/${id }?pageNo=${forderActivityList.upPage}&searchType=${searchType}&serachForderQuery1=${serachForderQuery1}&serachForderQuery2=${serachForderQuery2}&serachForderQueryVal1=${serachForderQueryVal1}&serachForderQueryVal2=${serachForderQueryVal2}&serachForderQuery3=${serachForderQuery3}&serachForderQuery4=${serachForderQuery4}&serachForderQueryVal3=${serachForderQueryVal3}&serachForderQueryVal4=${serachForderQueryVal4}&time1=${time1}&time2=${time2}"
 								type="button" class="btn btn-white"> <i
 								class="fa fa-chevron-left"></i>
 							</a>
@@ -125,14 +125,14 @@
 									</c:when>
 									<c:otherwise>
 										<a
-											href="${pageContext.request.contextPath}/adminUser/index/${id }?pageNo=${nav}&time1=${time1}&time2=${time2}&selectVal=${selectVal}&selectQuery=${selectQuery}"
+											href="${pageContext.request.contextPath}/adminUser/index/${id }?pageNo=${nav}&searchType=${searchType}&serachForderQuery1=${serachForderQuery1}&serachForderQuery2=${serachForderQuery2}&serachForderQueryVal1=${serachForderQueryVal1}&serachForderQueryVal2=${serachForderQueryVal2}&serachForderQuery3=${serachForderQuery3}&serachForderQuery4=${serachForderQuery4}&serachForderQueryVal3=${serachForderQueryVal3}&serachForderQueryVal4=${serachForderQueryVal4}&time1=${time1}&time2=${time2}"
 											class="btn btn-white">${nav}</a>
 									</c:otherwise>
 								</c:choose>
 							</c:forEach>
 
 							<a
-								href="${pageContext.request.contextPath}/adminUser/index/${id }?pageNo=${forderActivityList.nextPage}&time1=${time1}&time2=${time2}&selectVal=${selectVal}&selectQuery=${selectQuery}"
+								href="${pageContext.request.contextPath}/adminUser/index/${id }?pageNo=${forderActivityList.nextPage}&searchType=${searchType}&serachForderQuery1=${serachForderQuery1}&serachForderQuery2=${serachForderQuery2}&serachForderQueryVal1=${serachForderQueryVal1}&serachForderQueryVal2=${serachForderQueryVal2}&serachForderQuery3=${serachForderQuery3}&serachForderQuery4=${serachForderQuery4}&serachForderQueryVal3=${serachForderQueryVal3}&serachForderQueryVal4=${serachForderQueryVal4}&time1=${time1}&time2=${time2}"
 								type="button" class="btn btn-white"> <i
 								class="fa fa-chevron-right"></i>
 							</a>

@@ -388,7 +388,7 @@
 					<c:if test="${not empty searchList.datas}">
 						<div class="btn-group" style="margin: 0 auto;">
 							<a
-								href="${pageContext.request.contextPath}/photoMessageAction/searchImgsByQuerys?selectQuery=${selectQuery}&selectVal=${selectVal }&pageNo=${searchList.upPage}"
+								href="${pageContext.request.contextPath}/photoMessageAction/searchImgsByQuerys?searchType=${searchType}&serachForderQuery3=${serachForderQuery3}&serachForderQuery4=${serachForderQuery4}&serachForderQueryVal3=${serachForderQueryVal3}&serachForderQueryVal4=${serachForderQueryVal4}&serachForderQuery1=${serachForderQuery1}&serachForderQuery2=${serachForderQuery2}&serachForderQueryVal1=${serachForderQueryVal1}&serachForderQueryVal2=${serachForderQueryVal2}&time1=${time1}&time2=${time2}&pageNo=${searchList.upPage}"
 								type="button" class="btn btn-white"> <i
 								class="fa fa-chevron-left"></i>
 							</a>
@@ -400,14 +400,14 @@
 									</c:when>
 									<c:otherwise>
 										<a
-											href="${pageContext.request.contextPath}/photoMessageAction/searchImgsByQuerys?selectQuery=${selectQuery}&selectVal=${selectVal }&pageNo=${nav}"
+											href="${pageContext.request.contextPath}/photoMessageAction/searchImgsByQuerys?searchType=${searchType}&serachForderQuery3=${serachForderQuery3}&serachForderQuery4=${serachForderQuery4}&serachForderQueryVal3=${serachForderQueryVal3}&serachForderQueryVal4=${serachForderQueryVal4}&serachForderQuery1=${serachForderQuery1}&serachForderQuery2=${serachForderQuery2}&serachForderQueryVal1=${serachForderQueryVal1}&serachForderQueryVal2=${serachForderQueryVal2}&time1=${time1}&time2=${time2}&pageNo=${nav}"
 											class="btn btn-white">${nav}</a>
 									</c:otherwise>
 								</c:choose>
 							</c:forEach>
 
-							<a
-								href="${pageContext.request.contextPath}/photoMessageAction/searchImgsByQuerys?selectQuery=${selectQuery}&selectVal=${selectVal }&pageNo=${searchList.nextPage}"
+							<aserachForderQueryVal3
+								href="${pageContext.request.contextPath}/photoMessageAction/searchImgsByQuerys?searchType=${searchType}&serachForderQuery3=${serachForderQuery3}&serachForderQuery4=${serachForderQuery4}&serachForderQueryVal3=${serachForderQueryVal3}&serachForderQueryVal4=${serachForderQueryVal4}&serachForderQuery1=${serachForderQuery1}&serachForderQuery2=${serachForderQuery2}&serachForderQueryVal1=${serachForderQueryVal1}&serachForderQueryVal2=${serachForderQueryVal2}&time1=${time1}&time2=${time2}&pageNo=${searchList.nextPage}"
 								type="button" class="btn btn-white"> <i
 								class="fa fa-chevron-right"></i>
 							</a>

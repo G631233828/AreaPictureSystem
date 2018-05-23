@@ -136,13 +136,18 @@
 
 
 <body>
+
 	<div id="wrapper">
+	
 		<!-- .aside left menu -->
 		<%@include file="../../public/left.jsp"%>
+		
 		<div id="page-wrapper" class="gray-bg dashbard-1">
 			<!-- .aside top jsp -->
 			<%@include file="../../public/top.jsp"%>
+			
 			<div class="wrapper wrapper-content">
+			
 				<div class="row">
 					<!-- 内容 -->
 					<div class="col-lg-12">

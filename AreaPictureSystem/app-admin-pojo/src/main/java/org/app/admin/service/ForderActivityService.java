@@ -637,7 +637,7 @@ public class ForderActivityService extends GeneralServiceImpl<ForderActivity> {
 
 			Query query = new Query();
 			// 查询所有非个人的活动
-			query.addCriteria(Criteria.where("forderActivityName").is(forderActivityName))
+			query.addCriteria(Criteria.where("forderActivityName").regex(forderActivityName))
 					.addCriteria(Criteria.where("type").ne(BaseType.Type.PERSION));
 
 			list = this.find(query, ForderActivity.class);

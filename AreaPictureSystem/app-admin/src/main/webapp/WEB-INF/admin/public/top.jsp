@@ -328,6 +328,21 @@
 							$(this).attr("selected", true);
 						}
 					});
+					
+					if(serachForderQuery2 == 'forderActivityDate'){
+						$("#betweenDate").show();
+						$("#CommonSearch").hide();
+					}
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
 			/* 		$("#serachForderQueryVal1 option").each(function() {
 						if ($(this).val() == serachForderQueryVal1) {
 							$(this).attr("selected", true);

@@ -43,15 +43,26 @@ public class SortBean implements Comparable<SortBean> {
 		this.adminUser = adminUser;
 	}
 
-	
-	
-	
+
+	public int getForderActivityNum() {
+		return forderActivityNum;
+	}
+
+	public void setForderActivityNum(int forderActivityNum) {
+		this.forderActivityNum = forderActivityNum;
+	}
+
+
+
+
+
 
 	@Override
 	public String toString() {
 		return "SortBean [name=" + name + ", sortnum=" + sortnum + ", uploadnum=" + uploadnum + ", adminUser="
-				+ adminUser + "]";
+				+ adminUser + ", forderActivityNum=" + forderActivityNum + "]";
 	}
+
 
 
 
@@ -61,6 +72,10 @@ public class SortBean implements Comparable<SortBean> {
     private int sortnum;
     private int uploadnum;
     private AdminUser adminUser;
+    private int forderActivityNum;
+    
+    
+    
     
 	@Override
 	public int compareTo(SortBean o) {
