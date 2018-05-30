@@ -138,13 +138,9 @@
 													<div class="col-md-3">
 
 														<div class="form-group">
-															<label class="col-sm-5 control-label"
-																style="margin-top: 10px;">月数：</label>
-
-															<div class="col-sm-7">
 																<select class="form-control m-b" name="month"
 																	onchange="return clearSelect()" id="month">
-																	<option value=""></option>
+																	<option value="">选择月数</option>
 																	<option value="1">1个月</option>
 																	<option value="2">2个月</option>
 																	<option value="3">3个月</option>
@@ -158,11 +154,10 @@
 																	<option value="11">11个月</option>
 																	<option value="12">12个月</option>
 																</select>
-															</div>
 														</div>
 													</div>
 
-													<div class="col-md-3">
+													<div class="col-md-5">
 
 														<div class="form-group">
 															<a class="btn btn-white btn-bitbucket flip" id="more"
@@ -242,7 +237,7 @@
 															<div class="form-group">
 																<button class="btn  btn-white"
 																	onclick="return toclean();">
-																	<i class="fa fa-times"> </i>清除日期${companyId }
+																	<i class="fa fa-times"> </i>清除日期
 																</button>
 															</div>
 														</div>

@@ -431,7 +431,7 @@ public class AdminUserService extends GeneralServiceImpl<AdminUser> {
 				row = sheet.createRow(1);
 				for (int a = 0; a < 5; a++) {
 					HSSFCell cell = row.createCell(a);
-					cell.setCellValue("统计范围：所有企业");
+					cell.setCellValue("统计范围："+adminCompany.getName());
 					sheet.addMergedRegion(new CellRangeAddress(1, 1, 0, 5 - 1));
 					cell.setCellStyle(style);
 				}
