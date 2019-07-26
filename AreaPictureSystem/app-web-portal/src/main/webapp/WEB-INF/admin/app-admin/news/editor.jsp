@@ -187,10 +187,10 @@
 
 
 	<script
-		src="${pageContext.request.contextPath}/assets/admin/bootstrap-fileinput/js/fileinput.js"
+		src="${pageContext.request.contextPath}/assets/plugs/admin/bootstrap-fileinput/js/fileinput.js"
 		type="text/javascript"></script>
 	<script
-		src="${pageContext.request.contextPath}/assets/admin/bootstrap-fileinput/js/fileinput_locale_zh.js"
+		src="${pageContext.request.contextPath}/assets/plugs/bootstrap-fileinput/js/fileinput_locale_zh.js"
 		type="text/javascript"></script>
 
 

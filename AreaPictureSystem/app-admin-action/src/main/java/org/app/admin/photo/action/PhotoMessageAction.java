@@ -39,8 +39,6 @@ import org.app.admin.util.UploadUtil;
 import org.app.admin.util.basetreetime.BaseTreeTime;
 import org.app.admin.util.basetreetime.LayerAdmonCompany;
 import org.app.admin.util.executor.ExecutorsQueue;
-import org.app.admin.util.executor.SingletionThreadPoolExecutor;
-import org.app.admin.util.executor.Task;
 import org.app.framework.action.GeneralAction;
 import org.app.framework.util.BasicDataResult;
 import org.app.framework.util.Common;
@@ -694,6 +692,7 @@ public class PhotoMessageAction extends GeneralAction<ForderActivity> {
 		}
 		if (pagination == null)
 			pagination = new Pagination<Resource>(pageNo, pageSize, listfavorites.size());
+		
 		List<Resource> list2 = new ArrayList<Resource>();
 		int pN = 0;
 		int pS = 0;
